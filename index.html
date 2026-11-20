@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>English Study Hub</title>
+<meta name="description" content="Página para estudiar inglés: Passive Voice, Modals of Deduction, First Conditional y vocabulario de Cinema y Education.">
+<style>
+:root{
+  --bg:#f6f7fb; --surface:#ffffff; --surface-2:#eef1f8; --text:#1c2033; --muted:#5b6178;
+  --border:#dde1ec; --accent:#3b5bdb; --accent-soft:#e3e9ff; --accent-text:#ffffff;
+  --ok:#2b8a3e; --ok-soft:#e3f6e8; --bad:#c92a2a; --bad-soft:#fdeaea; --warn-soft:#fff4db; --warn:#8a5a00;
+  --shadow:0 1px 2px rgba(20,25,50,.06),0 4px 16px rgba(20,25,50,.06);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#11131c; --surface:#1a1d29; --surface-2:#232738; --text:#e6e8f2; --muted:#a0a6bd;
+    --border:#2f3448; --accent:#7c94ff; --accent-soft:#262e52; --accent-text:#0e1120;
+    --ok:#69db7c; --ok-soft:#173222; --bad:#ff8787; --bad-soft:#3a1a1d; --warn-soft:#3a2f12; --warn:#ffd166;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#11131c; --surface:#1a1d29; --surface-2:#232738; --text:#e6e8f2; --muted:#a0a6bd;
+  --border:#2f3448; --accent:#7c94ff; --accent-soft:#262e52; --accent-text:#0e1120;
+  --ok:#69db7c; --ok-soft:#173222; --bad:#ff8787; --bad-soft:#3a1a1d; --warn-soft:#3a2f12; --warn:#ffd166;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+header.top{position:sticky;top:0;z-index:10;background:var(--surface);border-bottom:1px solid var(--border)}
+.top-inner{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;font-size:1.1rem;text-decoration:none;color:var(--text);white-space:nowrap}
+.brand span{color:var(--accent)}
+nav.tabs{max-width:960px;margin:0 auto;padding:0 16px 10px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--muted);padding:6px 12px;border-radius:999px;font-size:.92rem;font-weight:600;border:1px solid transparent}
+nav.tabs a:hover{background:var(--surface-2)}
+nav.tabs a.active{background:var(--accent);color:var(--accent-text)}
+.theme-btn{margin-left:auto}
+main{max-width:960px;margin:0 auto;padding:20px 16px 64px}
+section.page{display:none}
+section.page.active{display:block}
+h1{font-size:1.8rem;line-height:1.2;margin:.2em 0 .3em}
+h2{font-size:1.3rem;margin:1.6em 0 .5em}
+h3{font-size:1.05rem;margin:1.2em 0 .4em}
+.lead{color:var(--muted);margin-top:0}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.grid .card{margin:0}
+.topic{display:block;text-decoration:none;color:var(--text);transition:transform .15s}
+.topic:hover{transform:translateY(-2px)}
+.topic .emoji{font-size:1.8rem}
+.topic h3{margin:.3em 0 .2em}
+.topic p{margin:0 0 10px;color:var(--muted);font-size:.93rem}
+.bar{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);border-radius:99px;transition:width .3s}
+.bar-label{font-size:.82rem;color:var(--muted);margin-top:4px}
+.table-wrap{overflow-x:auto;margin:10px 0;border:1px solid var(--border);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.94rem;background:var(--surface)}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--surface-2);font-weight:700}
+tr:last-child td{border-bottom:0}
+.formula{background:var(--accent-soft);border-radius:10px;padding:12px 14px;font-weight:600;margin:10px 0}
+.formula code{font:inherit}
+.tip,.warn{border-radius:10px;padding:10px 14px;margin:10px 0}
+.tip{background:var(--ok-soft)}
+.warn{background:var(--warn-soft)}
+.tip b:first-child,.warn b:first-child{display:block}
+.ex{color:var(--muted)}
+em.hl,b.hl{color:var(--accent);font-style:normal}
+.scale{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.scale div{border-radius:10px;padding:10px;text-align:center;font-size:.92rem}
+.scale .s1{background:var(--ok-soft)} .scale .s2{background:var(--warn-soft)} .scale .s3{background:var(--bad-soft)}
+.scale strong{display:block;font-size:1.05rem}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--accent);color:var(--accent-text);border:0;border-radius:10px;padding:8px 14px;font-weight:700}
+.ghost{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:6px 12px;font-size:.88rem}
+.ghost:hover{background:var(--surface-2)}
+.quiz-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.score{font-weight:700}
+ol.items{padding-left:1.4em;margin:0}
+.item{margin:0 0 18px;padding-bottom:14px;border-bottom:1px dashed var(--border)}
+.item:last-child{border-bottom:0;margin-bottom:0}
+.q{margin:0 0 8px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{background:var(--surface-2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 12px;text-align:left}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--ok-soft);border-color:var(--ok);color:var(--text)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);text-decoration:line-through}
+input.gap,input.rw{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-bottom:2px solid var(--accent);border-radius:6px;padding:3px 8px;margin:2px 4px;min-width:0}
+input.gap{width:9.5em;max-width:100%}
+input.rw{display:block;width:100%;margin:6px 0}
+input.right{border-color:var(--ok);background:var(--ok-soft)}
+input.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.actions{display:flex;gap:8px;margin-top:6px;flex-wrap:wrap}
+.fb{margin-top:8px;font-size:.93rem;border-radius:8px}
+.fb:empty{display:none}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+.fb .ans{color:var(--text)}
+.bank{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 14px}
+.bank span{background:var(--accent-soft);padding:3px 10px;border-radius:99px;font-size:.9rem;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin:10px 0}
+.flash{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 12px 12px;min-height:118px;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center;text-align:center;user-select:none}
+.flash:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.flash .en{font-weight:800;font-size:1.05rem}
+.flash .back{display:none}
+.flash.flipped{background:var(--accent-soft)}
+.flash.flipped .back{display:block}
+.flash.flipped .front-hint{display:none}
+.flash .es{font-weight:700;color:var(--accent);margin-top:4px}
+.flash .exs{font-size:.85rem;color:var(--muted);margin-top:4px}
+.front-hint{font-size:.78rem;color:var(--muted);margin-top:6px}
+.speak{position:absolute;top:6px;right:6px;background:transparent;border:0;font-size:1rem;padding:2px 4px;border-radius:6px;opacity:.75}
+.speak:hover{opacity:1;background:var(--surface-2)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.toolbar input{font:inherit;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px 10px;flex:1 1 180px;min-width:0}
+.pill{display:inline-block;font-size:.75rem;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--surface-2);color:var(--muted);margin-left:4px;vertical-align:middle}
+footer{color:var(--muted);text-align:center;font-size:.85rem;padding:20px 16px 40px}
+@media (max-width:560px){
+  h1{font-size:1.5rem}
+  .card{padding:14px}
+  .scale{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="#home">English <span>Study Hub</span></a>
+    <button class="ghost theme-btn" id="themeBtn" aria-label="Cambiar tema">🌓</button>
+  </div>
+  <nav class="tabs" id="tabs">
+    <a href="#home">🏠 Inicio</a>
+    <a href="#passive">🔄 Passive Voice</a>
+    <a href="#cinema">🎬 Cinema</a>
+    <a href="#modals">🕵️ Modals of Deduction</a>
+    <a href="#conditional">🔀 First Conditional</a>
+    <a href="#education">🎓 Education</a>
+    <a href="#repaso">🏁 Repaso final</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ================= HOME ================= -->
+<section class="page" id="home">
+  <h1>¡Hola! 👋 Vamos a estudiar inglés</h1>
+  <p class="lead">Elegí un tema. Cada uno tiene explicación, ejemplos y ejercicios que se corrigen solos. Tu progreso queda guardado en este navegador.</p>
+  <div class="grid">
+    <a class="card topic" href="#passive"><div class="emoji">🔄</div><h3>Passive Voice</h3><p>Cuando importa la acción, no quién la hace.</p><div class="bar"><i data-topic-bar="passive"></i></div><div class="bar-label" data-topic-label="passive"></div></a>
+    <a class="card topic" href="#cinema"><div class="emoji">🎬</div><h3>Vocabulary: Cinema</h3><p>Plot, cast, sequel, box office y más.</p><div class="bar"><i data-topic-bar="cinema"></i></div><div class="bar-label" data-topic-label="cinema"></div></a>
+    <a class="card topic" href="#modals"><div class="emoji">🕵️</div><h3>Modals of Deduction</h3><p>must, might, can't… para sacar conclusiones.</p><div class="bar"><i data-topic-bar="modals"></i></div><div class="bar-label" data-topic-label="modals"></div></a>
+    <a class="card topic" href="#conditional"><div class="emoji">🔀</div><h3>First Conditional</h3><p>If + present, will + verbo.</p><div class="bar"><i data-topic-bar="conditional"></i></div><div class="bar-label" data-topic-label="conditional"></div></a>
+    <a class="card topic" href="#education"><div class="emoji">🎓</div><h3>Vocabulary: Education</h3><p>Scholarship, deadline, drop out, resit…</p><div class="bar"><i data-topic-bar="education"></i></div><div class="bar-label" data-topic-label="education"></div></a>
+    <a class="card topic" href="#repaso"><div class="emoji">🏁</div><h3>Repaso final</h3><p>Mezcla de todos los temas, como en una prueba.</p><div class="bar"><i data-topic-bar="repaso"></i></div><div class="bar-label" data-topic-label="repaso"></div></a>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">💡 Cómo estudiar con esta página</h3>
+    <ol>
+      <li>Leé la explicación del tema y los ejemplos.</li>
+      <li>Hacé los ejercicios <b>sin mirar</b> la explicación. Si te equivocás, volvé a intentar antes de ver la respuesta.</li>
+      <li>En vocabulario, usá las tarjetas: tocá para darlas vuelta y 🔊 para escuchar la pronunciación.</li>
+      <li>Al final, hacé el <a href="#repaso">Repaso final</a> para ver qué tenés que repasar.</li>
+    </ol>
+    <button class="ghost" id="resetAll">Borrar todo mi progreso</button>
+  </div>
+</section>
+
+<!-- ================= PASSIVE ================= -->
+<section class="page" id="passive">
+  <h1>🔄 Passive Voice</h1>
+  <p class="lead">La voz pasiva se usa cuando lo importante es <b>la acción o el objeto</b>, no quién la hace (porque no lo sabemos, es obvio o no importa).</p>
+
+  <div class="card">
+    <h2 style="margin-top:0">Activa vs. pasiva</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Activa</th><th>Pasiva</th></tr>
+      <tr><td><b>James Cameron</b> directed <b>Titanic</b>.</td><td><b>Titanic</b> was directed by James Cameron.</td></tr>
+      <tr><td>Someone stole <b>my bike</b>.</td><td><b>My bike</b> was stolen.</td></tr>
+    </table></div>
+    <div class="formula">Estructura: objeto + <b class="hl">be</b> (en el tiempo del verbo original) + <b class="hl">participio pasado</b> (+ by + quién lo hace)</div>
+    <p>El truco: el verbo <b>be</b> toma el tiempo verbal de la oración activa, y el verbo principal siempre va en <b>participio</b> (3ª columna).</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">La pasiva en cada tiempo verbal</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Tiempo</th><th>Forma de be</th><th>Activa</th><th>Pasiva</th></tr>
+      <tr><td>Present simple</td><td>am / is / are + pp</td><td>They make films here.</td><td>Films <b>are made</b> here.</td></tr>
+      <tr><td>Present continuous</td><td>am / is / are being + pp</td><td>They are repairing the cinema.</td><td>The cinema <b>is being repaired</b>.</td></tr>
+      <tr><td>Past simple</td><td>was / were + pp</td><td>Nolan directed Inception.</td><td>Inception <b>was directed</b> by Nolan.</td></tr>
+      <tr><td>Past continuous</td><td>was / were being + pp</td><td>They were filming a scene.</td><td>A scene <b>was being filmed</b>.</td></tr>
+      <tr><td>Present perfect</td><td>has / have been + pp</td><td>They have cancelled the show.</td><td>The show <b>has been cancelled</b>.</td></tr>
+      <tr><td>Past perfect</td><td>had been + pp</td><td>They had sold all the tickets.</td><td>All the tickets <b>had been sold</b>.</td></tr>
+      <tr><td>Future (will)</td><td>will be + pp</td><td>They will announce the winners.</td><td>The winners <b>will be announced</b>.</td></tr>
+      <tr><td>going to</td><td>am/is/are going to be + pp</td><td>They are going to release a sequel.</td><td>A sequel <b>is going to be released</b>.</td></tr>
+      <tr><td>Modales</td><td>modal + be + pp</td><td>You must turn off your phone.</td><td>Your phone <b>must be turned off</b>.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Negativas y preguntas</h2>
+    <p>Se forman con el verbo <b>be</b>, igual que siempre:</p>
+    <ul>
+      <li>The film <b>wasn't</b> released in Argentina.</li>
+      <li><b>Was</b> the film directed by Spielberg?</li>
+      <li>The tickets <b>haven't been</b> sold yet.</li>
+      <li><b>Is</b> English spoken in Canada?</li>
+    </ul>
+    <div class="tip"><b>✅ ¿Cuándo uso "by"?</b>Solo cuando importa quién hizo la acción. No se pone <i>by people, by someone, by them</i>: <span class="ex">❌ My phone was stolen by someone. → ✅ My phone was stolen.</span></div>
+    <div class="warn"><b>⚠️ Errores típicos</b>
+      ❌ The film directed by Nolan. → ✅ The film <b>was</b> directed by Nolan. (¡falta be!)<br>
+      ❌ The house was build in 1990. → ✅ The house was <b>built</b> in 1990. (participio, no infinitivo)</div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Participios irregulares que vas a necesitar</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Verbo</th><th>Participio</th><th>Verbo</th><th>Participio</th></tr>
+      <tr><td>make</td><td>made</td><td>write</td><td>written</td></tr>
+      <tr><td>build</td><td>built</td><td>give</td><td>given</td></tr>
+      <tr><td>sell</td><td>sold</td><td>take</td><td>taken</td></tr>
+      <tr><td>find</td><td>found</td><td>see</td><td>seen</td></tr>
+      <tr><td>shoot (filmar)</td><td>shot</td><td>steal</td><td>stolen</td></tr>
+      <tr><td>speak</td><td>spoken</td><td>choose</td><td>chosen</td></tr>
+      <tr><td>break</td><td>broken</td><td>teach</td><td>taught</td></tr>
+    </table></div>
+  </div>
+
+  <h2>✏️ Ejercicio 1: Elegí la opción correcta</h2>
+  <div class="card" data-quiz="passive1"></div>
+  <h2>✏️ Ejercicio 2: Completá con la pasiva</h2>
+  <p class="lead">Escribí el verbo entre paréntesis en voz pasiva, en el tiempo correcto.</p>
+  <div class="card" data-quiz="passive2"></div>
+  <h2>✏️ Ejercicio 3: Pasá a voz pasiva</h2>
+  <p class="lead">Reescribí la oración completa. Usá <i>by</i> solo si es necesario.</p>
+  <div class="card" data-quiz="passive3"></div>
+</section>
+
+<!-- ================= CINEMA ================= -->
+<section class="page" id="cinema">
+  <h1>🎬 Vocabulary: Cinema</h1>
+  <p class="lead">Tocá cada tarjeta para ver la traducción y un ejemplo. Tocá 🔊 para escuchar la pronunciación.</p>
+  <div class="toolbar">
+    <input type="search" placeholder="Buscar palabra…" data-filter="cinema" aria-label="Buscar palabra">
+    <button class="ghost" data-shuffle="cinema">🔀 Mezclar</button>
+    <button class="ghost" data-flipall="cinema">↻ Dar vuelta todas</button>
+  </div>
+  <div class="cards" data-cards="cinema"></div>
+
+  <div class="card">
+    <h3 style="margin-top:0">🎭 Film genres</h3>
+    <p>action film · comedy · romantic comedy (rom-com) · drama · horror film · thriller · science fiction (sci-fi) · fantasy · animated film · documentary · musical · war film · western</p>
+    <h3>⭐ Adjetivos para opinar sobre una película</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Positivos 👍</th><th>Negativos 👎</th></tr>
+      <tr><td><b>gripping</b> – atrapante</td><td><b>dull / boring</b> – aburrida</td></tr>
+      <tr><td><b>moving</b> – conmovedora</td><td><b>predictable</b> – predecible</td></tr>
+      <tr><td><b>hilarious</b> – muy graciosa</td><td><b>overrated</b> – sobrevalorada</td></tr>
+      <tr><td><b>breathtaking</b> – impresionante</td><td><b>far-fetched</b> – poco creíble</td></tr>
+      <tr><td><b>thought-provoking</b> – que te hace pensar</td><td><b>too long / slow</b> – demasiado larga / lenta</td></tr>
+    </table></div>
+    <h3>💬 Frases útiles para hablar de una película</h3>
+    <ul>
+      <li>It's <b>set in</b> London in the 1940s.</li>
+      <li>It <b>stars</b> Zendaya and Tom Holland.</li>
+      <li>It's <b>directed by</b> Greta Gerwig.</li>
+      <li>It's <b>based on</b> a true story / a novel.</li>
+      <li>The <b>plot</b> is about a girl who…</li>
+      <li>I'd (don't) <b>recommend</b> it because…</li>
+    </ul>
+  </div>
+
+  <h2>✏️ Ejercicio 1: ¿Cómo se dice en inglés?</h2>
+  <div class="card" data-vquiz="cinema"></div>
+  <h2>✏️ Ejercicio 2: Completá con la palabra correcta</h2>
+  <div class="card">
+    <div class="bank"><span>box office</span><span>plot twist</span><span>cast</span><span>subtitles</span><span>set in</span><span>sequel</span><span>review</span><span>starring</span></div>
+    <div data-quiz="cinema1"></div>
+  </div>
+</section>
+
+<!-- ================= MODALS ================= -->
+<section class="page" id="modals">
+  <h1>🕵️ Modals of Deduction</h1>
+  <p class="lead">Usamos estos modales para <b>sacar conclusiones</b> o decir qué tan seguros estamos de algo, a partir de lo que vemos o sabemos. Como un detective.</p>
+
+  <div class="card">
+    <h2 style="margin-top:0">En presente</h2>
+    <div class="scale">
+      <div class="s1"><strong>must</strong>Estoy casi seguro de que <b>sí</b> (95%)</div>
+      <div class="s2"><strong>might / may / could</strong>Es <b>posible</b> (50%)</div>
+      <div class="s3"><strong>can't</strong>Estoy casi seguro de que <b>no</b> (95%)</div>
+    </div>
+    <div class="formula">sujeto + must / might / may / could / can't + verbo base</div>
+    <ul>
+      <li>She's been working all day. She <b>must be</b> tired. <span class="ex">(seguro que está cansada)</span></li>
+      <li>I don't know where Tom is. He <b>might be</b> at the cinema. <span class="ex">(puede ser)</span></li>
+      <li>You've just eaten a huge pizza. You <b>can't be</b> hungry! <span class="ex">(imposible)</span></li>
+    </ul>
+    <p>Para algo que está pasando <b>ahora</b>, usamos <b>be + -ing</b>:</p>
+    <ul><li>The lights are off. They <b>must be sleeping</b>.</li><li>He's not answering. He <b>might be watching</b> a film.</li></ul>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">En pasado</h2>
+    <div class="formula">sujeto + must / might / may / could / can't / couldn't + <b class="hl">have + participio</b></div>
+    <div class="table-wrap"><table>
+      <tr><th>Modal</th><th>Significado</th><th>Ejemplo</th></tr>
+      <tr><td><b>must have</b> + pp</td><td>seguro que pasó</td><td>The streets are wet. It <b>must have rained</b>.</td></tr>
+      <tr><td><b>might / may / could have</b> + pp</td><td>quizás pasó</td><td>She's late. She <b>might have missed</b> the bus.</td></tr>
+      <tr><td><b>can't / couldn't have</b> + pp</td><td>imposible que haya pasado</td><td>He <b>can't have seen</b> the film. It isn't out yet.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <div class="warn"><b>⚠️ Errores típicos</b>
+      ❌ He <b>mustn't</b> be at home. → ✅ He <b>can't</b> be at home. (<i>mustn't</i> es prohibición, no deducción)<br>
+      ❌ It <b>can</b> be true. → ✅ It <b>might / could</b> be true. (para posibilidad no se usa <i>can</i>)<br>
+      ❌ She must <b>to</b> be tired. → ✅ She must be tired. (después de un modal, nunca <i>to</i>)<br>
+      ❌ He must have <b>went</b>. → ✅ He must have <b>gone</b>. (participio)</div>
+    <div class="tip"><b>✅ Truco para reconocerlos</b>Si en español dirías "<i>seguro que…</i>" → <b>must</b>. "<i>Capaz que / quizás…</i>" → <b>might</b>. "<i>No puede ser que…</i>" → <b>can't</b>.</div>
+  </div>
+
+  <h2>✏️ Ejercicio 1: Elegí el modal correcto</h2>
+  <div class="card" data-quiz="modals1"></div>
+  <h2>✏️ Ejercicio 2: Reescribí con un modal de deducción</h2>
+  <p class="lead">Ejemplo: <i>I'm sure he is at home.</i> → <i>He must be at home.</i></p>
+  <div class="card" data-quiz="modals2"></div>
+</section>
+
+<!-- ================= FIRST CONDITIONAL ================= -->
+<section class="page" id="conditional">
+  <h1>🔀 First Conditional</h1>
+  <p class="lead">Se usa para hablar de situaciones <b>reales o posibles en el futuro</b> y su resultado probable.</p>
+
+  <div class="card">
+    <div class="formula">If + <b class="hl">present simple</b>, &nbsp;<b class="hl">will</b> + verbo base</div>
+    <ul>
+      <li>If it <b>rains</b> tomorrow, we <b>will stay</b> at home.</li>
+      <li>If you <b>study</b>, you<b>'ll pass</b> the exam.</li>
+      <li>If she <b>doesn't hurry</b>, she <b>won't catch</b> the bus.</li>
+    </ul>
+    <p>Las dos partes se pueden invertir. Si el <i>if</i> va primero, se pone <b>coma</b>; si va en el medio, no:</p>
+    <ul><li>We'll stay at home <b>if</b> it rains.</li></ul>
+    <div class="warn"><b>⚠️ El error más común</b>Nunca va <i>will</i> después de <i>if</i>:<br>❌ If it <b>will rain</b>, we'll stay home. → ✅ If it <b>rains</b>, we'll stay home.</div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Variantes</h2>
+    <div class="table-wrap"><table>
+      <tr><th>En lugar de will…</th><th>Ejemplo</th></tr>
+      <tr><td><b>may / might</b> (menos seguro)</td><td>If you go to bed late, you <b>might</b> feel tired.</td></tr>
+      <tr><td><b>can</b> (permiso / posibilidad)</td><td>If you finish your homework, you <b>can</b> watch TV.</td></tr>
+      <tr><td><b>imperativo</b> (orden / consejo)</td><td>If you see Tom, <b>tell</b> him to call me.</td></tr>
+      <tr><td><b>going to</b></td><td>If they lose again, the coach <b>is going to</b> quit.</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">unless, when, as soon as</h2>
+    <ul>
+      <li><b>unless</b> = <i>if … not</i> (a menos que): <b>Unless</b> you study, you'll fail. = If you <b>don't</b> study, you'll fail.</li>
+      <li><b>when</b> = estás seguro de que va a pasar: I'll call you <b>when</b> I get home. (seguro llego)</li>
+      <li><b>if</b> = puede pasar o no: I'll call you <b>if</b> I have time. (no sé si voy a tener)</li>
+      <li><b>as soon as / before / after / until</b> también van con presente: I'll text you <b>as soon as</b> I <b>arrive</b>.</li>
+    </ul>
+    <div class="warn"><b>⚠️ Ojo con unless</b>Unless ya es negativo: ❌ Unless you <b>don't</b> study… → ✅ Unless you study…</div>
+    <div class="tip"><b>✅ Comparalo con el Zero Conditional</b>Zero (verdades generales): If you heat ice, it <b>melts</b>. (siempre pasa)<br>First (una situación concreta del futuro): If you leave the ice outside, it <b>will melt</b>.</div>
+  </div>
+
+  <h2>✏️ Ejercicio 1: Completá con la forma correcta</h2>
+  <div class="card" data-quiz="cond1"></div>
+  <h2>✏️ Ejercicio 2: Elegí la opción correcta</h2>
+  <div class="card" data-quiz="cond2"></div>
+  <h2>✏️ Ejercicio 3: Uní las dos ideas en una oración</h2>
+  <p class="lead">Ejemplo: <i>You study. You pass.</i> → <i>If you study, you will pass.</i></p>
+  <div class="card" data-quiz="cond3"></div>
+</section>
+
+<!-- ================= EDUCATION ================= -->
+<section class="page" id="education">
+  <h1>🎓 Vocabulary: Education</h1>
+  <p class="lead">Tocá cada tarjeta para ver la traducción y un ejemplo. 🇬🇧 = inglés británico, 🇺🇸 = inglés americano.</p>
+  <div class="toolbar">
+    <input type="search" placeholder="Buscar palabra…" data-filter="education" aria-label="Buscar palabra">
+    <button class="ghost" data-shuffle="education">🔀 Mezclar</button>
+    <button class="ghost" data-flipall="education">↻ Dar vuelta todas</button>
+  </div>
+  <div class="cards" data-cards="education"></div>
+
+  <div class="card">
+    <h3 style="margin-top:0">🧩 Collocations (palabras que van juntas)</h3>
+    <div class="table-wrap"><table>
+      <tr><th>Verbo</th><th>Combinaciones</th></tr>
+      <tr><td><b>take / sit</b></td><td>an exam, a test, a course</td></tr>
+      <tr><td><b>do</b></td><td>homework, research, a course, an exercise</td></tr>
+      <tr><td><b>make</b></td><td>progress, a mistake, notes (también <i>take notes</i>)</td></tr>
+      <tr><td><b>get</b></td><td>a degree, good/bad marks, a scholarship</td></tr>
+      <tr><td><b>pay</b></td><td>attention, tuition fees</td></tr>
+      <tr><td><b>hand in</b></td><td>an assignment, an essay, homework</td></tr>
+    </table></div>
+    <div class="warn"><b>⚠️ Falsos amigos</b>
+      <b>career</b> = carrera profesional (trabajo). "Estudio la carrera de Medicina" = <i>I'm studying Medicine / doing a degree in Medicine</i>.<br>
+      <b>college</b> no es "colegio": en EE.UU. es la universidad. El colegio = <i>school</i>.<br>
+      <b>to approve</b> ≠ aprobar un examen. Aprobar = <i>to pass</i>.<br>
+      <b>lecture</b> ≠ lectura. Es una clase o conferencia. Lectura = <i>reading</i>.</div>
+  </div>
+
+  <h2>✏️ Ejercicio 1: ¿Cómo se dice en inglés?</h2>
+  <div class="card" data-vquiz="education"></div>
+  <h2>✏️ Ejercicio 2: Completá con la palabra correcta</h2>
+  <div class="card">
+    <div class="bank"><span>scholarship</span><span>deadline</span><span>dropped out</span><span>revise</span><span>plagiarism</span><span>gap year</span><span>enrol</span><span>resit</span></div>
+    <div data-quiz="edu1"></div>
+  </div>
+  <h2>✏️ Ejercicio 3: Collocations</h2>
+  <div class="card" data-quiz="edu2"></div>
+</section>
+
+<!-- ================= REPASO ================= -->
+<section class="page" id="repaso">
+  <h1>🏁 Repaso final</h1>
+  <p class="lead">Preguntas de todos los temas mezcladas. Si te equivocás en alguna, volvé a ese tema y repasalo.</p>
+  <div class="card" data-quiz="repaso"></div>
+</section>
+
+</main>
+<footer>Hecho para estudiar 📚 · El progreso se guarda solo en este navegador.</footer>
+
+<script>
+/* ===================== DATOS ===================== */
+// En "mc" la opción correcta es la primera (se mezclan al mostrarse).
+// En "gaps" y "rw", las respuestas alternativas se separan con |
+const Q = {
+  passive1: {type:"mc", items:[
+    {q:"<i>Titanic</i> ___ by James Cameron.", o:["was directed","directed","is directing"], e:"Pasado simple pasivo: was + participio."},
+    {q:"English ___ all over the world.", o:["is spoken","speaks","is speaking"], e:"Present simple pasivo: is + spoken."},
+    {q:"The new cinema ___ right now.", o:["is being built","is built","is building"], e:"<i>Right now</i> → present continuous pasivo: is being + pp."},
+    {q:"The film ___ in 2019.", o:["was released","released","has released"], e:"Fecha del pasado → was released."},
+    {q:"The tickets ___ yet.", o:["haven't been sold","haven't sold","weren't sold"], e:"<i>Yet</i> → present perfect pasivo: have been + pp."},
+    {q:"The winners ___ tomorrow.", o:["will be announced","will announce","are announce"], e:"Futuro pasivo: will be + pp."},
+    {q:"Popcorn ___ inside the cinema.", o:["can be bought","can buy","can bought"], e:"Modal pasivo: modal + be + pp."},
+    {q:"When we arrived, the scene ___.", o:["was being filmed","was filming","is being filmed"], e:"Acción en progreso en el pasado → was being + pp."}
+  ]},
+  passive2: {type:"gaps", items:[
+    {q:"The Harry Potter books ___ (write) by J.K. Rowling.", a:["were written"]},
+    {q:"Thousands of films ___ (make) in India every year.", a:["are made"]},
+    {q:"My phone ___ (steal) last night.", a:["was stolen"]},
+    {q:"The movie ___ (show) at the moment in cinemas.", a:["is being shown"]},
+    {q:"Look! The show ___ (cancel).", a:["has been cancelled|has been canceled"], e:"Resultado presente de algo reciente → present perfect."},
+    {q:"The new series ___ (release) next month.", a:["will be released|is going to be released"]},
+    {q:"___ the film ___ (shoot) in New Zealand?", a:["was|is","shot"], e:"Pregunta en pasiva: Was + sujeto + participio."},
+    {q:"Mobile phones ___ (must / turn off) during the film.", a:["must be turned off|must be switched off"]}
+  ]},
+  passive3: {type:"rw", items:[
+    {q:"People speak Spanish in Argentina.", a:"Spanish is spoken in Argentina"},
+    {q:"Steven Spielberg directed <i>Jaws</i>.", a:"Jaws was directed by Steven Spielberg|Jaws was directed by Spielberg"},
+    {q:"They are filming a new series.", a:"A new series is being filmed"},
+    {q:"Someone has stolen my bike.", a:"My bike has been stolen"},
+    {q:"They will show the film at 9 pm.", a:"The film will be shown at 9 pm|The film will be shown at 9pm|The film will be shown at 9"},
+    {q:"They didn't invite me to the premiere.", a:"I wasn't invited to the premiere"},
+    {q:"Did Taika Waititi write the script?", a:"Was the script written by Taika Waititi"},
+    {q:"You must turn off your phone.", a:"Your phone must be turned off|Your phone must be switched off"}
+  ]},
+  cinema1: {type:"gaps", items:[
+    {q:"The film was a huge success at the ___ .", a:["box office"]},
+    {q:"I didn't expect that ___ at the end! I was shocked.", a:["plot twist"]},
+    {q:"The ___ is amazing: it includes Meryl Streep and Tom Hanks.", a:["cast"]},
+    {q:"I prefer watching films in English with ___ .", a:["subtitles"]},
+    {q:"The story is ___ New York in the 1920s.", a:["set in"]},
+    {q:"They are making a ___ because the first film was so popular.", a:["sequel"]},
+    {q:"I read a terrible ___ of the film in the newspaper.", a:["review"]},
+    {q:"It's a new comedy ___ Emma Stone.", a:["starring"]}
+  ]},
+  modals1: {type:"mc", items:[
+    {q:"The lights are off. They ___ be at home.", o:["can't","must","might"], e:"Luces apagadas → seguro que no están: can't."},
+    {q:"She's been studying all day. She ___ be tired.", o:["must","can't","mustn't"], e:"Seguro que sí → must. (<i>mustn't</i> es prohibición.)"},
+    {q:"I'm not sure where Tom is. He ___ be in the library.", o:["might","must","can't"], e:"No estoy seguro → might (posibilidad)."},
+    {q:"You've just eaten a huge pizza. You ___ be hungry!", o:["can't","must","may"], e:"Imposible → can't."},
+    {q:"The streets are wet. It ___ rained last night.", o:["must have","can't have","must"], e:"Deducción sobre el pasado → must have + pp."},
+    {q:"She ___ written that email. She doesn't have internet.", o:["can't have","must have","should have"], e:"Imposible en el pasado → can't have + pp."},
+    {q:"I don't know why she's late. She ___ have missed the bus.", o:["may","must","can't"], e:"Posibilidad en el pasado → may/might/could have."},
+    {q:"Your phone ___ be ringing. I can hear it in your bag.", o:["must","can't","mustn't"], e:"Lo escucho → seguro que sí: must be + -ing."},
+    {q:"He ___ seen the film. It isn't in cinemas yet!", o:["can't have","must have","might have"], e:"Imposible → can't have seen."},
+    {q:"Which one is correct?", o:["It might be true.","It can be true.","It must to be true."], e:"Para posibilidad usamos might/may/could, y nunca <i>to</i> después del modal."}
+  ]},
+  modals2: {type:"rw", items:[
+    {q:"I'm sure he is at the cinema.", a:"He must be at the cinema"},
+    {q:"I'm sure she isn't the director.", a:"She can't be the director|She cannot be the director|She couldn't be the director"},
+    {q:"Maybe they are watching a film.", a:"They might be watching a film|They may be watching a film|They could be watching a film"},
+    {q:"I'm sure you were exhausted after the trip.", a:"You must have been exhausted after the trip"},
+    {q:"It's impossible that he forgot the tickets.", a:"He can't have forgotten the tickets|He couldn't have forgotten the tickets|He cannot have forgotten the tickets"},
+    {q:"Perhaps she lost her keys.", a:"She might have lost her keys|She may have lost her keys|She could have lost her keys"}
+  ]},
+  cond1: {type:"gaps", items:[
+    {q:"If it ___ (rain) tomorrow, we ___ (watch) a film at home.", a:["rains","will watch"]},
+    {q:"If you ___ (not / hurry), you ___ (miss) the bus.", a:["don't hurry","will miss"]},
+    {q:"She ___ (be) angry if you ___ (tell) her.", a:["will be","tell"]},
+    {q:"If I ___ (pass) the exam, my parents ___ (buy) me a new phone.", a:["pass","will buy"]},
+    {q:"We ___ (not / go) to the beach unless the weather ___ (improve).", a:["won't go","improves"]},
+    {q:"What ___ you ___ (do) if they ___ (not / come)?", a:["will","do","don't come"]},
+    {q:"I'll call you as soon as I ___ (arrive).", a:["arrive"], e:"Después de <i>as soon as</i> va presente, no <i>will</i>."},
+    {q:"If he ___ (study) hard, he ___ (get) a scholarship.", a:["studies","will get|might get|may get"]}
+  ]},
+  cond2: {type:"mc", items:[
+    {q:"___ you study, you won't pass.", o:["Unless","If","When"], e:"Unless = if not: si no estudiás, no aprobás."},
+    {q:"If she ___ late, we'll start without her.", o:["is","will be","would be"], e:"Después de <i>if</i> va present simple."},
+    {q:"I'll text you when I ___ home.", o:["get","will get","got"], e:"Después de <i>when</i> (futuro) va presente."},
+    {q:"___ I see Tom tomorrow, I'll tell him. (No sé si lo voy a ver.)", o:["If","When","Unless"], e:"No es seguro → if."},
+    {q:"Which sentence is correct?", o:["If I have time, I'll help you.","If I will have time, I'll help you.","If I have time, I help you tomorrow."], e:"If + presente, will + verbo."},
+    {q:"You can't go out ___ you finish your homework.", o:["unless","if","when"], e:"No podés salir a menos que termines → unless."},
+    {q:"If you don't wear a coat, you ___ cold.", o:["will be","are being","would"], e:"Resultado futuro → will + verbo."},
+    {q:"Which sentence is correct?", o:["Unless it rains, we'll play outside.","Unless it doesn't rain, we'll play outside.","Unless it will rain, we'll play outside."], e:"Unless ya es negativo: no se agrega <i>don't</i>."}
+  ]},
+  cond3: {type:"rw", items:[
+    {q:"It rains. We stay at home.", a:"If it rains, we will stay at home|If it rains, we'll stay at home|If it rains we will stay at home|If it rains we'll stay at home|We will stay at home if it rains"},
+    {q:"You don't study. You fail the exam.", a:"If you don't study, you will fail the exam|If you don't study you will fail the exam|You will fail the exam if you don't study|Unless you study, you will fail the exam|Unless you study you will fail the exam"},
+    {q:"She gets a scholarship. She goes to university.", a:"If she gets a scholarship, she will go to university|If she gets a scholarship she will go to university|She will go to university if she gets a scholarship"},
+    {q:"The film is boring. I leave the cinema.", a:"If the film is boring, I will leave the cinema|If the film is boring I will leave the cinema|I will leave the cinema if the film is boring"}
+  ]},
+  edu1: {type:"gaps", items:[
+    {q:"She got a ___ , so she doesn't have to pay tuition fees.", a:["scholarship"]},
+    {q:"The ___ for the essay is next Friday. Don't be late!", a:["deadline"]},
+    {q:"He ___ of university in his second year to start a business.", a:["dropped out"]},
+    {q:"I can't go out tonight. I have to ___ for my exam tomorrow.", a:["revise|review|study"]},
+    {q:"Copying from the internet without saying where it's from is called ___ .", a:["plagiarism"]},
+    {q:"After finishing school, she took a ___ to travel around Asia.", a:["gap year"]},
+    {q:"You need to ___ on the course before September.", a:["enrol|enroll"]},
+    {q:"If you fail, you can ___ the exam in December.", a:["resit|retake"]}
+  ]},
+  edu2: {type:"mc", items:[
+    {q:"I have to ___ my homework before dinner.", o:["do","make","take"], e:"do homework."},
+    {q:"Don't worry, everybody ___ mistakes when they learn a language.", o:["makes","does","takes"], e:"make a mistake."},
+    {q:"She ___ a degree in Biology last year.", o:["got","did make","took up"], e:"get a degree."},
+    {q:"Please ___ attention, this will be in the exam!", o:["pay","do","make"], e:"pay attention."},
+    {q:"We have to ___ in the assignment by Monday.", o:["hand","give","take"], e:"hand in = entregar."},
+    {q:"When do you ___ your final exams?", o:["take","make","pass by"], e:"take / sit an exam = rendir."},
+    {q:"\"Aprobé el examen\" en inglés es:", o:["I passed the exam.","I approved the exam.","I took off the exam."], e:"Aprobar un examen = pass. <i>Approve</i> es dar el visto bueno."},
+    {q:"\"Estudio la carrera de Derecho\":", o:["I'm studying Law.","I'm studying the career of Law.","I'm doing the career of Law."], e:"<i>Career</i> es la vida profesional, no la carrera universitaria."}
+  ]},
+  repaso: {type:"mc", items:[
+    {q:"The Oscars ___ every year in Los Angeles.", o:["are held","hold","are holding"], e:"Passive, present simple."},
+    {q:"<i>Oppenheimer</i> ___ by Christopher Nolan.", o:["was directed","directed","was direct"], e:"Passive, past simple."},
+    {q:"He isn't answering his phone. He ___ be in class.", o:["might","mustn't","can"], e:"Modals of deduction: posibilidad → might."},
+    {q:"She ___ have finished the essay already. She started it five minutes ago!", o:["can't","must","may"], e:"Imposible → can't have."},
+    {q:"If you ___ hard, you'll get good marks.", o:["work","will work","worked"], e:"First conditional: if + presente."},
+    {q:"I won't go to the party unless you ___ too.", o:["come","don't come","will come"], e:"Unless + afirmativo, en presente."},
+    {q:"The music in a film is called the ___ .", o:["soundtrack","script","trailer"], e:"Cinema vocabulary."},
+    {q:"A short video that shows parts of a film before it is released:", o:["trailer","sequel","review"], e:"Cinema vocabulary."},
+    {q:"The money students pay to study at a university:", o:["tuition fees","scholarship","grades"], e:"Education vocabulary."},
+    {q:"To study a lot in a very short time just before an exam:", o:["to cram","to drop out","to enrol"], e:"Education vocabulary."},
+    {q:"The tickets ___ already ___ when we got to the cinema.", o:["had / been sold","have / sold","were / selling"], e:"Passive, past perfect."},
+    {q:"Look at her smile! She ___ have passed the exam.", o:["must","can't","mustn't"], e:"Seguro que sí → must have passed."}
+  ]}
+};
+
+// Vocabulario: [inglés, español, ejemplo]
+const V = {
+  cinema: [
+    ["director","director/a","Greta Gerwig is the director of <i>Barbie</i>."],
+    ["cast","elenco","The film has an amazing cast."],
+    ["character","personaje","My favourite character is the villain."],
+    ["plot","trama, argumento","The plot is about a group of friends who…"],
+    ["script","guion","The actors are reading the script."],
+    ["scene","escena","The final scene made me cry."],
+    ["sequel","secuela","<i>Toy Story 2</i> is the sequel to <i>Toy Story</i>."],
+    ["prequel","precuela","The prequel shows what happened before."],
+    ["remake","nueva versión","It's a remake of a 1980s film."],
+    ["trailer","tráiler, avance","Have you seen the trailer?"],
+    ["special effects","efectos especiales","The special effects are incredible."],
+    ["soundtrack","banda sonora","I love the soundtrack of this film."],
+    ["subtitles","subtítulos","I watch series with English subtitles."],
+    ["dubbed","doblada","I don't like dubbed films."],
+    ["box office","taquilla, boletería","It was a hit at the box office."],
+    ["blockbuster","éxito de taquilla","It's the biggest blockbuster of the summer."],
+    ["review","crítica, reseña","The film got great reviews."],
+    ["critic","crítico/a","Critics loved the film."],
+    ["genre","género","What's your favourite film genre?"],
+    ["lead role","papel protagónico","She plays the lead role."],
+    ["supporting role","papel secundario","He won an Oscar for a supporting role."],
+    ["to star (in)","protagonizar","Zendaya stars in the film."],
+    ["audience","público","The audience clapped at the end."],
+    ["premiere","estreno (con alfombra roja)","The actors went to the premiere in London."],
+    ["to release","estrenar, lanzar","The film will be released in May."],
+    ["set in","ambientada en","The story is set in Paris."],
+    ["based on","basada en","It's based on a true story."],
+    ["plot twist","giro argumental","What a plot twist!"],
+    ["spoiler","spoiler","Don't tell me the ending! No spoilers!"],
+    ["ending","final","I didn't like the ending."],
+    ["cliffhanger","final en suspenso","The series ended with a cliffhanger."],
+    ["to shoot / to film","filmar, rodar","The film was shot in Iceland."],
+    ["on location","en locaciones reales","They filmed on location in Morocco."],
+    ["award","premio","It won three awards."],
+    ["to be nominated","estar nominado/a","She was nominated for an Oscar."]
+  ],
+  education: [
+    ["nursery school","jardín de infantes","My little sister goes to nursery school."],
+    ["primary school","escuela primaria","I went to primary school near my house."],
+    ["secondary school 🇬🇧 / high school 🇺🇸","escuela secundaria","I'm in my fourth year of secondary school."],
+    ["state school 🇬🇧 / public school 🇺🇸","escuela pública","Most children go to state schools."],
+    ["private school","escuela privada","Private schools can be very expensive."],
+    ["boarding school","internado","Harry Potter goes to a boarding school."],
+    ["university / college 🇺🇸","universidad","She wants to go to university."],
+    ["degree","título universitario","He has a degree in Engineering."],
+    ["undergraduate","estudiante de grado","Undergraduates have lectures every day."],
+    ["postgraduate","estudiante de posgrado","She's a postgraduate student."],
+    ["scholarship","beca","He got a scholarship to study abroad."],
+    ["tuition fees","matrícula, aranceles","Tuition fees are very high in the UK."],
+    ["curriculum","plan de estudios","Art is part of the school curriculum."],
+    ["subject","materia","My favourite subject is History."],
+    ["timetable 🇬🇧 / schedule 🇺🇸","horario","Check your timetable for tomorrow."],
+    ["term / semester","trimestre / cuatrimestre","The second term starts in July."],
+    ["lecture","clase magistral (uni)","The lecture was about climate change."],
+    ["lecturer","profesor/a universitario/a","Our lecturer is very strict."],
+    ["pupil","alumno/a (escuela)","There are 30 pupils in the class."],
+    ["head teacher 🇬🇧 / principal 🇺🇸","director/a de escuela","I was sent to the head teacher's office."],
+    ["assignment","trabajo práctico, tarea","I have to finish my History assignment."],
+    ["essay","ensayo, redacción","Write a 200-word essay."],
+    ["deadline","fecha límite","The deadline is on Friday."],
+    ["mark 🇬🇧 / grade 🇺🇸","nota, calificación","I got a good mark in Maths."],
+    ["to revise 🇬🇧 / to review 🇺🇸","repasar, estudiar para un examen","I'm revising for my exams."],
+    ["to cram","estudiar todo a último momento","I crammed all night for the test."],
+    ["to enrol 🇬🇧 / to enroll 🇺🇸","inscribirse","I enrolled on an English course."],
+    ["to drop out","abandonar los estudios","He dropped out of university."],
+    ["to graduate","recibirse, graduarse","She graduated in 2024."],
+    ["to take / sit an exam","rendir un examen","I'm taking my exam on Monday."],
+    ["to pass","aprobar","I passed all my exams!"],
+    ["to fail","desaprobar, reprobar","He failed the Physics test."],
+    ["to resit / retake","volver a rendir","I have to resit Maths in December."],
+    ["to skip class / play truant","faltar a clase, hacerse la rata","He skipped class to go to the cinema."],
+    ["attendance","asistencia","Attendance is compulsory."],
+    ["compulsory","obligatorio","English is a compulsory subject."],
+    ["plagiarism","plagio","Plagiarism is a serious offence."],
+    ["distance learning","educación a distancia","She's doing a distance learning course."],
+    ["gap year","año sabático (antes de la uni)","I'm taking a gap year to travel."],
+    ["qualification","título, certificación","You need good qualifications for this job."]
+  ]
+};
+
+const TOPICS = {
+  passive:["passive1","passive2","passive3"],
+  cinema:["cinema1"],
+  modals:["modals1","modals2"],
+  conditional:["cond1","cond2","cond3"],
+  education:["edu1","edu2"],
+  repaso:["repaso"]
+};
+
+/* ===================== UTILIDADES ===================== */
+const KEY = "english-study-hub-v1";
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+function el(tag, cls, html){ const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e; }
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function norm(s){
+  return String(s).toLowerCase()
+    .replace(/[’‘`´]/g,"'")
+    .replace(/\bwon't\b/g,"will not").replace(/\bcan't\b/g,"cannot").replace(/\bshan't\b/g,"shall not")
+    .replace(/n't\b/g," not").replace(/\bcan not\b/g,"cannot").replace(/'ll\b/g," will")
+    .replace(/[.,!?;:"()]/g," ").replace(/\s+/g," ").trim();
+}
+const alts = s => s.split("|");
+function matches(input, accepted){ const n=norm(input); return n!=="" && alts(accepted).some(x=>norm(x)===n); }
+
+let P = {};
+try { P = JSON.parse(localStorage.getItem(KEY)) || {}; } catch(e) { P = {}; }
+function save(){ try { localStorage.setItem(KEY, JSON.stringify(P)); } catch(e) {} }
+function rec(id, i, val){ if(id.startsWith("_")) return; (P[id] = P[id] || {})[i] = val; save(); updateScores(); }
+function saved(id, i){ return (P[id] || {})[i]; }
+
+/* ===================== EJERCICIOS ===================== */
+const session = {}; // puntajes de quizzes generados (no se guardan)
+
+function renderQuiz(box, id, quiz){
+  box.innerHTML = "";
+  const head = el("div","quiz-head");
+  head.append(el("span","score"), el("button","ghost","↺ Reiniciar"));
+  head.querySelector(".score").dataset.for = id;
+  head.querySelector("button").onclick = () => {
+    if(id.startsWith("_")) { renderVQuiz(box); return; }
+    delete P[id]; save(); renderQuiz(box, id, quiz);
+  };
+  box.appendChild(head);
+  const ol = el("ol","items");
+  quiz.items.forEach((it, i) => {
+    const li = el("li","item");
+    ({mc:mcItem, gaps:gapItem, rw:rwItem})[quiz.type](li, it, id, i);
+    ol.appendChild(li);
+  });
+  box.appendChild(ol);
+  updateScores();
+}
+
+function mcItem(li, it, id, i){
+  li.appendChild(el("p","q",it.q));
+  const opts = el("div","opts"), fb = el("div","fb");
+  shuffle(it.o.map((_,k)=>k)).forEach(k => {
+    const b = el("button","opt"); b.textContent = it.o[k]; b.dataset.k = k; b.type="button";
+    b.onclick = () => choose(k, false);
+    opts.appendChild(b);
+  });
+  function choose(k, restoring){
+    if(li.dataset.done) return; li.dataset.done = 1;
+    const ok = k === 0;
+    $$(".opt", opts).forEach(b => { const kk=+b.dataset.k; b.disabled = true; if(kk===0) b.classList.add("right"); else if(kk===k) b.classList.add("wrong"); });
+    fb.className = "fb " + (ok ? "ok" : "bad");
+    fb.innerHTML = (ok ? "✅ ¡Bien! " : "❌ ") + '<span class="ans">' + (it.e || "") + "</span>";
+    if(id.startsWith("_")){ session[id] = session[id] || {}; session[id][i] = {ok}; updateScores(); }
+    else if(!restoring) rec(id, i, {ok, v:k});
+  }
+  li.append(opts, fb);
+  const s = saved(id, i); if(s) choose(s.v, true);
+}
+
+function checker(li, inputs, getOk, answerText, it, id, i){
+  const actions = el("div","actions"), fb = el("div","fb");
+  const btn = el("button","btn","Corregir"); btn.type="button";
+  const show = el("button","ghost","Ver respuesta"); show.type="button"; show.hidden = true;
+  actions.append(btn, show);
+  li.append(actions, fb);
+  function check(restoring){
+    const res = getOk();
+    if(res.empty && !restoring){ fb.className="fb bad"; fb.textContent="Escribí una respuesta primero ✍️"; return; }
+    const ok = res.ok;
+    fb.className = "fb " + (ok ? "ok" : "bad");
+    fb.innerHTML = ok ? "✅ ¡Correcto!" + (it.e ? ' <span class="ans">' + it.e + "</span>" : "") : "❌ Revisá lo marcado en rojo y probá otra vez.";
+    show.hidden = ok;
+    if(!restoring) rec(id, i, {ok, v:inputs.map(x=>x.value)});
+  }
+  btn.onclick = () => check(false);
+  show.onclick = () => { fb.className="fb bad"; fb.innerHTML = '💡 Respuesta: <b class="ans">' + answerText + "</b>" + (it.e ? ' <span class="ans">— ' + it.e + "</span>" : ""); show.hidden = true; };
+  inputs.forEach(inp => inp.addEventListener("keydown", e => { if(e.key==="Enter"){ e.preventDefault(); check(false); } }));
+  const s = saved(id, i);
+  if(s){ inputs.forEach((inp,k)=>inp.value = (s.v||[])[k] || ""); check(true); }
+}
+
+function mkInput(cls){ const inp = el("input", cls); inp.type="text"; inp.autocomplete="off"; inp.setAttribute("autocapitalize","off"); inp.spellcheck=false; inp.setAttribute("aria-label","Respuesta"); return inp; }
+
+function gapItem(li, it, id, i){
+  const p = el("p","q"), inputs = [];
+  const parts = it.q.split("___");
+  parts.forEach((t,k) => {
+    p.appendChild(document.createTextNode(t));
+    if(k < parts.length-1){ const inp = mkInput("gap"); inputs.push(inp); p.appendChild(inp); }
+  });
+  li.appendChild(p);
+  checker(li, inputs, () => {
+    let ok = true, empty = true;
+    inputs.forEach((inp,k) => {
+      if(inp.value.trim()) empty = false;
+      const good = matches(inp.value, it.a[k]);
+      inp.classList.toggle("right", good); inp.classList.toggle("wrong", !good);
+      if(!good) ok = false;
+    });
+    return {ok, empty};
+  }, it.a.map(x=>alts(x)[0]).join(" … "), it, id, i);
+}
+
+function rwItem(li, it, id, i){
+  li.appendChild(el("p","q",it.q));
+  const inp = mkInput("rw"); inp.placeholder = "Escribí la oración completa…";
+  li.appendChild(inp);
+  checker(li, [inp], () => {
+    const good = matches(inp.value, it.a);
+    inp.classList.toggle("right", good); inp.classList.toggle("wrong", !good);
+    return {ok:good, empty:!inp.value.trim()};
+  }, alts(it.a)[0] + ".", it, id, i);
+}
+
+/* Quiz de vocabulario generado al azar */
+function renderVQuiz(box){
+  const topic = box.dataset.vquiz, list = V[topic], id = "_v_" + topic;
+  session[id] = {};
+  const picks = shuffle(list).slice(0, 8);
+  const items = picks.map(w => {
+    const others = shuffle(list.filter(x => x !== w)).slice(0,3).map(x=>x[0]);
+    return {q:'¿Cómo se dice <b>"' + w[1] + '"</b> en inglés?', o:[w[0], ...others], e:w[2]};
+  });
+  renderQuiz(box, id, {type:"mc", items});
+  const again = el("button","btn","🎲 Nuevas preguntas"); again.type="button"; again.style.marginTop="8px";
+  again.onclick = () => renderVQuiz(box);
+  box.appendChild(again);
+  box._total = items.length;
+}
+
+function updateScores(){
+  $$(".score").forEach(s => {
+    const id = s.dataset.for;
+    if(id.startsWith("_")){
+      const r = Object.values(session[id]||{}); const box = s.closest("[data-vquiz]");
+      s.textContent = "Puntaje: " + r.filter(x=>x.ok).length + " / " + (box && box._total || 8);
+      return;
+    }
+    const total = Q[id].items.length, r = Object.values(P[id]||{});
+    s.textContent = "Puntaje: " + r.filter(x=>x.ok).length + " / " + total;
+  });
+  Object.entries(TOPICS).forEach(([t, ids]) => {
+    let total = 0, ok = 0;
+    ids.forEach(id => { total += Q[id].items.length; ok += Object.values(P[id]||{}).filter(x=>x.ok).length; });
+    const pct = total ? Math.round(ok/total*100) : 0;
+    const bar = $('[data-topic-bar="'+t+'"]'), lab = $('[data-topic-label="'+t+'"]');
+    if(bar) bar.style.width = pct + "%";
+    if(lab) lab.textContent = ok ? ok + " de " + total + " ejercicios bien (" + pct + "%)" : "Sin empezar";
+  });
+}
+
+/* ===================== TARJETAS ===================== */
+let voices = [];
+function loadVoices(){ try { voices = speechSynthesis.getVoices(); } catch(e) {} }
+if("speechSynthesis" in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  const clean = text.replace(/🇬🇧|🇺🇸/g,"").replace(/\(.*?\)/g,"").replace(/\//g,", ");
+  const u = new SpeechSynthesisUtterance(clean);
+  u.lang = "en-GB";
+  const v = voices.find(v=>v.lang==="en-GB") || voices.find(v=>v.lang && v.lang.startsWith("en"));
+  if(v) u.voice = v;
+  u.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function renderCards(box, order){
+  const topic = box.dataset.cards, list = order || V[topic];
+  box.innerHTML = "";
+  list.forEach(w => {
+    const c = el("div","flash");
+    c.tabIndex = 0; c.setAttribute("role","button"); c.dataset.search = (w[0] + " " + w[1]).toLowerCase();
+    c.innerHTML = '<div class="en"></div><div class="front-hint">tocá para ver</div><div class="back"><div class="es"></div><div class="exs"></div></div>';
+    c.querySelector(".en").textContent = w[0];
+    c.querySelector(".es").textContent = w[1];
+    c.querySelector(".exs").innerHTML = w[2];
+    if("speechSynthesis" in window){
+      const sp = el("button","speak","🔊"); sp.type="button"; sp.setAttribute("aria-label","Escuchar " + w[0]);
+      sp.onclick = e => { e.stopPropagation(); speak(w[0]); };
+      c.appendChild(sp);
+    }
+    const flip = () => c.classList.toggle("flipped");
+    c.onclick = flip;
+    c.onkeydown = e => { if(e.key==="Enter"||e.key===" "){ e.preventDefault(); flip(); } };
+    box.appendChild(c);
+  });
+}
+
+/* ===================== NAVEGACIÓN ===================== */
+function route(){
+  const id = (location.hash || "#home").slice(1);
+  const page = document.getElementById(id) && document.getElementById(id).classList.contains("page") ? id : "home";
+  $$("section.page").forEach(s => s.classList.toggle("active", s.id === page));
+  $$("#tabs a").forEach(a => {
+    const on = a.getAttribute("href") === "#" + page;
+    a.classList.toggle("active", on);
+    if(on) a.scrollIntoView({block:"nearest", inline:"center"});
+  });
+  window.scrollTo(0,0);
+}
+
+/* ===================== TEMA ===================== */
+(function(){
+  let t = null; try { t = localStorage.getItem(KEY+"-theme"); } catch(e) {}
+  if(t) document.documentElement.dataset.theme = t;
+  $("#themeBtn").onclick = () => {
+    const cur = document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(KEY+"-theme", next); } catch(e) {}
+  };
+})();
+
+/* ===================== INICIO ===================== */
+$$("[data-quiz]").forEach(b => renderQuiz(b, b.dataset.quiz, Q[b.dataset.quiz]));
+$$("[data-vquiz]").forEach(renderVQuiz);
+$$("[data-cards]").forEach(b => renderCards(b));
+$$("[data-filter]").forEach(inp => inp.addEventListener("input", () => {
+  const q = inp.value.toLowerCase().trim();
+  $$('[data-cards="'+inp.dataset.filter+'"] .flash').forEach(c => c.hidden = q && !c.dataset.search.includes(q));
+}));
+$$("[data-shuffle]").forEach(b => b.onclick = () => renderCards($('[data-cards="'+b.dataset.shuffle+'"]'), shuffle(V[b.dataset.shuffle])));
+$$("[data-flipall]").forEach(b => b.onclick = () => {
+  const cards = $$('[data-cards="'+b.dataset.flipall+'"] .flash');
+  const anyFront = cards.some(c => !c.classList.contains("flipped"));
+  cards.forEach(c => c.classList.toggle("flipped", anyFront));
+});
+$("#resetAll").onclick = () => {
+  if(!confirm("¿Seguro que querés borrar todo tu progreso?")) return;
+  P = {}; save();
+  $$("[data-quiz]").forEach(b => renderQuiz(b, b.dataset.quiz, Q[b.dataset.quiz]));
+};
+window.addEventListener("hashchange", route);
+route();
+updateScores();
+</script>
+</body>
+</html>
