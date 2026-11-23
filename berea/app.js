@@ -11,7 +11,7 @@
   const pre = t => "<pre>" + esc(t) + "</pre>";
 
   const TABS = [
-    ["pres", "Presentación"], ["mapa", "Mapa"], ["sql", "SQL"], ["cpp", "C++ / Qt"], ["profe", "La profe dice…"],
+    ["pres", "Presentación"], ["donde", "¿Dónde toco?"], ["mapa", "Mapa"], ["sql", "SQL"], ["cpp", "C++ / Qt"], ["profe", "La profe dice…"],
     ["qss", "Pantallas y QSS"], ["ej", "Ejercicios"], ["preg", "Preguntas"], ["olv", "Que no se te pase"]
   ];
   const V = {};
@@ -51,6 +51,47 @@
     const iv = setInterval(() => { const c = $("#c", box); if (c && vivo) { const s = (Date.now() - t0) / 1000, b = G.bloques[i]; c.textContent = mmss(s); c.classList.toggle("pasado", s > b.seg); } }, 250);
     timers.push(iv); pintar();
   }
+
+  /* ---------- ¿Dónde toco? ---------- */
+  V.donde = function (el) {
+    const D = window.DONDE, Z = window.ZONAS;
+    const copiar = t => { try { navigator.clipboard.writeText(t); } catch (e) { /* sin portapapeles: se copia a mano */ } };
+    const tarjeta = (d, i) => `<details class="card"><summary><b>${esc(d.pedido)}</b> <span class="tag">~${d.min} min</span></summary>
+      <h3>Dónde</h3><ul>${d.donde.map(x => `<li><code>${esc(x)}</code></li>`).join("")}</ul>
+      <h3>Cómo</h3><p>${esc(d.como)}</p><h3>Cómo lo compruebo</h3><p>${esc(d.probar)}</p>
+      <div class="aviso"><b>Ojo.</b> ${esc(d.ojo)}</div><button class="sm cp" data-i="${i}">Copiar rutas</button></details>`;
+    el.innerHTML = `<h2>Si te piden un cambio, buscá acá</h2>
+      <p class="mut">Solo Qt y base SQL (la web no entra). Rutas relativas a <code>Proyect-berea</code>. Los números de línea son aproximados: buscá por el nombre de la función.</p>
+      <input type="search" id="q" placeholder="Escribí: seña, texto, color, campo, 24 horas, error, botón…" autocomplete="off" style="width:100%;padding:.6em;margin:.5em 0">
+      <div id="lista"></div>
+      <div class="card"><h3>Simulacro</h3><div id="sim"></div></div>
+      <h2>Zonas de los .cpp grandes</h2><p class="mut">Estos dos archivos no tienen cabecera en el repo. Acá está qué hay en cada tramo.</p>` +
+      Z.map(z => `<h3><code>${esc(z.arch)}</code></h3><table>${z.zonas.map(r => `<tr><td><code>${esc(r[0])}</code></td><td>${esc(r[1])}</td></tr>`).join("")}</table>`).join("");
+    const lista = $("#lista", el), q = $("#q", el);
+    function filtrar() {
+      const t = q.value.trim().toLowerCase();
+      const hay = D.map((d, i) => [d, i]).filter(([d]) => !t || (d.pedido + " " + d.donde.join(" ") + " " + d.como + " " + d.ojo).toLowerCase().includes(t));
+      lista.innerHTML = hay.length ? hay.map(([d, i]) => tarjeta(d, i)).join("") : `<p class="mut">Nada con «${esc(t)}». Probá con otra palabra.</p>`;
+      $$(".cp", lista).forEach(b => b.onclick = () => { copiar(D[b.dataset.i].donde.join("\n")); b.textContent = "Copiado"; });
+    }
+    q.oninput = filtrar; filtrar();
+    /* Simulacro: pedido al azar + cronómetro; la respuesta se ve al final. */
+    const sim = $("#sim", el); let t0 = 0, cur = null;
+    const sortear = () => { cur = D[Math.floor(Math.random() * D.length)]; t0 = Date.now(); pintarSim(); };
+    function pintarSim() {
+      sim.innerHTML = cur
+        ? `<p><b>Te piden:</b> ${esc(cur.pedido)}</p><div class="cron" id="cs">00:00</div><p class="mut">Decí en voz alta qué archivos tocás y cómo lo probás. Después mirá la respuesta.</p><button class="pri" id="ver">Ver respuesta</button>`
+        : `<button class="pri" id="otro">Pedirme un cambio</button> <span class="mut">Meta: saber dónde tocar en menos de 1 minuto.</span>`;
+      const o = $("#otro", sim); if (o) o.onclick = sortear;
+      const v = $("#ver", sim); if (v) v.onclick = () => {
+        const s = (Date.now() - t0) / 1000, c = cur; cur = null;
+        sim.innerHTML = `<p>Tardaste <b>${mmss(s)}</b> en decidir (la tarea completa: ~${c.min} min).</p><p><b>${esc(c.pedido)}</b></p><ul>${c.donde.map(x => `<li><code>${esc(x)}</code></li>`).join("")}</ul><p>${esc(c.como)}</p><button class="pri" id="otro">Otro pedido</button>`;
+        $("#otro", sim).onclick = sortear;
+      };
+    }
+    timers.push(setInterval(() => { const c = $("#cs", sim); if (c && cur) c.textContent = mmss((Date.now() - t0) / 1000); }, 250));
+    pintarSim();
+  };
 
   /* ---------- Mapa ---------- */
   V.mapa = function (el) {
