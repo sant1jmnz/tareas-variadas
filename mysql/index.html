@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>MySQL de punta a punta</title>
-<meta name="description" content="Plan de estudio de MySQL de 13:46 a 15:50 con foco en stored procedures: teoría, código, trampas, quizzes y ejercicios resueltos.">
+<meta name="description" content="Plan de estudio de MySQL a tu ritmo con foco en stored procedures: teoría, código, trampas, quizzes y ejercicios resueltos.">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@ h1{font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-.02em;margin:
 .now a{color:#fff;font-weight:600}
 .planw{padding-block:28px 8px}
 .plan{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.plan li{display:grid;grid-template-columns:5.4em minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:13px 12px;border-bottom:1px solid var(--line);border-radius:10px}
+.plan li{display:grid;grid-template-columns:2.6em minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:13px 12px;border-bottom:1px solid var(--line);border-radius:10px}
 .plan .t{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--teal);white-space:nowrap}
 .plan li.sp .t{color:var(--org)}
 .plan a{color:inherit;text-decoration:none;font-weight:600;font-size:18px}
@@ -114,7 +114,7 @@ details.sol>div{padding:0 16px 6px}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
 footer{padding-block:36px 48px;color:var(--mute);font-size:14px}
 @media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}.two{grid-template-columns:minmax(0,1fr)}}
-@media(max-width:560px){.plan li{grid-template-columns:4.1em minmax(0,1fr);gap:4px 12px}.plan .t{font-size:21px}.plan .m{grid-column:2;text-align:left}pre code{font-size:13px}.now .big{font-size:38px}}
+@media(max-width:560px){.plan li{grid-template-columns:2.2em minmax(0,1fr);gap:4px 12px}.plan .t{font-size:21px}.plan .m{grid-column:2;text-align:left}pre code{font-size:13px}.now .big{font-size:38px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rail i{transition:none}}
 </style>
 </head>
@@ -124,28 +124,28 @@ footer{padding-block:36px 48px;color:var(--mute);font-size:14px}
  <div class="wrap hero">
   <div>
    <h1>MySQL de punta a punta</h1>
-   <p class="lead">De 13:46 a 15:50, con descanso de 14:50 a 15:00. Casi la mitad del tiempo va a stored procedures. Cada bloque trae teoría corta, código para copiar y correr, trampas típicas, quiz y ejercicios con solución.</p>
+   <p class="lead">A tu ritmo, sin horarios: marcás cada bloque como terminado y seguís con el próximo. Casi la mitad del contenido es de stored procedures. Cada bloque trae teoría corta, código para copiar y correr, trampas típicas, quiz y ejercicios con solución.</p>
   </div>
   <div class="now" aria-live="polite">
-   <div class="lab">Ahora</div>
+   <div class="lab">Tu avance</div>
    <div class="nm" id="nowName">Cargando…</div>
    <div class="big" id="nowLeft">–</div>
    <div class="rail"><i id="rail"></i></div>
-   <div class="tot"><span id="nowTot">Fin a las 15:50</span><a id="nowGo" href="#b1">Ir al bloque actual ↓</a></div>
+   <div class="tot"><span id="nowTot">Marcá "Terminé" al final de cada bloque</span><a id="nowGo" href="#b1">Seguir ↓</a></div>
   </div>
  </div>
 </header>
 
 <div class="wrap planw">
  <ol class="plan" id="plan">
-  <li data-ini="13:46" data-fin="13:58" data-id="b1"><span class="t">13:46</span><div><a href="#b1">Fundamentos y DDL</a><span class="pill ahora">AHORA</span><small>Tipos de datos, CREATE, constraints, ALTER, DROP vs TRUNCATE vs DELETE, normalización</small></div><span class="m">12 min</span></li>
-  <li data-ini="13:58" data-fin="14:12" data-id="b2"><span class="t">13:58</span><div><a href="#b2">DML y consultas</a><span class="pill ahora">AHORA</span><small>INSERT, UPDATE, DELETE, SELECT, filtros, funciones, GROUP BY, HAVING</small></div><span class="m">14 min</span></li>
-  <li data-ini="14:12" data-fin="14:26" data-id="b3"><span class="t">14:12</span><div><a href="#b3">JOINs y SQL avanzado</a><span class="pill ahora">AHORA</span><small>JOINs, subconsultas, UNION, CTE, funciones de ventana, vistas, índices, transacciones</small></div><span class="m">14 min</span></li>
-  <li class="sp" data-ini="14:26" data-fin="14:50" data-id="b4"><span class="t">14:26</span><div><a href="#b4">Stored Procedures I</a><span class="sptag">SP</span><span class="pill ahora">AHORA</span><small>DELIMITER, IN / OUT / INOUT, variables, SELECT INTO, IF, CASE, WHILE, REPEAT, LOOP</small></div><span class="m">24 min</span></li>
-  <li data-ini="14:50" data-fin="15:00" data-id="pausa"><span class="t">14:50</span><div><a href="#pausa">Descanso</a><span class="pill ahora">AHORA</span><small>Pararte, agua, nada de pantalla</small></div><span class="m">10 min</span></li>
-  <li class="sp" data-ini="15:00" data-fin="15:25" data-id="b5"><span class="t">15:00</span><div><a href="#b5">Stored Procedures II</a><span class="sptag">SP</span><span class="pill ahora">AHORA</span><small>Cursores, handlers, SIGNAL / RESIGNAL, transacciones, SQL dinámico, seguridad</small></div><span class="m">25 min</span></li>
-  <li data-ini="15:25" data-fin="15:37" data-id="b6"><span class="t">15:25</span><div><a href="#b6">Funciones, triggers y eventos</a><span class="pill ahora">AHORA</span><small>CREATE FUNCTION, procedure vs función, triggers con NEW / OLD, eventos, usuarios y permisos</small></div><span class="m">12 min</span></li>
-  <li class="sp" data-ini="15:37" data-fin="15:50" data-id="b7"><span class="t">15:37</span><div><a href="#b7">Simulacro final</a><span class="sptag">SP</span><span class="pill ahora">AHORA</span><small>Plantilla de SP, preguntas de examen y ejercicios integradores</small></div><span class="m">13 min</span></li>
+  <li data-id="b1"><span class="t">1</span><div><a href="#b1">Fundamentos y DDL</a><span class="pill ahora">SIGUE</span><small>Tipos de datos, CREATE, constraints, ALTER, DROP vs TRUNCATE vs DELETE, normalización</small></div><span class="m">~12 min</span></li>
+  <li data-id="b2"><span class="t">2</span><div><a href="#b2">DML y consultas</a><span class="pill ahora">SIGUE</span><small>INSERT, UPDATE, DELETE, SELECT, filtros, funciones, GROUP BY, HAVING</small></div><span class="m">~14 min</span></li>
+  <li data-id="b3"><span class="t">3</span><div><a href="#b3">JOINs y SQL avanzado</a><span class="pill ahora">SIGUE</span><small>JOINs, subconsultas, UNION, CTE, funciones de ventana, vistas, índices, transacciones</small></div><span class="m">~14 min</span></li>
+  <li class="sp" data-id="b4"><span class="t">4</span><div><a href="#b4">Stored Procedures I</a><span class="sptag">SP</span><span class="pill ahora">SIGUE</span><small>DELIMITER, IN / OUT / INOUT, variables, SELECT INTO, IF, CASE, WHILE, REPEAT, LOOP</small></div><span class="m">~24 min</span></li>
+  <li data-id="pausa"><span class="t">☕</span><div><a href="#pausa">Descanso</a><span class="pill ahora">SIGUE</span><small>Cuando lo necesites: pararte, agua, nada de pantalla</small></div><span class="m">~10 min</span></li>
+  <li class="sp" data-id="b5"><span class="t">5</span><div><a href="#b5">Stored Procedures II</a><span class="sptag">SP</span><span class="pill ahora">SIGUE</span><small>Cursores, handlers, SIGNAL / RESIGNAL, transacciones, SQL dinámico, seguridad</small></div><span class="m">~25 min</span></li>
+  <li data-id="b6"><span class="t">6</span><div><a href="#b6">Funciones, triggers y eventos</a><span class="pill ahora">SIGUE</span><small>CREATE FUNCTION, procedure vs función, triggers con NEW / OLD, eventos, usuarios y permisos</small></div><span class="m">~12 min</span></li>
+  <li class="sp" data-id="b7"><span class="t">7</span><div><a href="#b7">Simulacro final</a><span class="sptag">SP</span><span class="pill ahora">SIGUE</span><small>Plantilla de SP, preguntas de examen y ejercicios integradores</small></div><span class="m">~13 min</span></li>
  </ol>
 </div>
 
@@ -167,7 +167,7 @@ footer{padding-block:36px 48px;color:var(--mute);font-size:14px}
 
 <!-- ===================== BASE ===================== -->
 <section class="blk" id="base">
- <div class="bh"><div><span class="when">Antes de arrancar · 2 min</span><h2>La base de práctica</h2></div></div>
+ <div class="bh"><div><span class="when">Antes de arrancar</span><h2>La base de práctica</h2></div></div>
  <p>Todos los ejemplos usan esta base <code>tienda</code>. Copiala entera y corrila en MySQL Workbench (rayo ⚡ "Execute") o en la consola <code>mysql</code>. Necesitás MySQL 8.</p>
  <div class="note"><b>Si usás una herramienta online</b> y la línea <code>DELIMITER</code> da error, es porque esa herramienta separa las sentencias sola: sacá las líneas <code>DELIMITER //</code> / <code>DELIMITER ;</code> y cambiá el <code>END //</code> por <code>END</code>.</div>
 <pre><code>-- Base de práctica: tienda
@@ -265,7 +265,7 @@ SET total = (SELECT SUM(d.cantidad * d.precio_unit)
 
 <!-- ===================== B1 ===================== -->
 <section class="blk" id="b1">
- <div class="bh"><div><span class="when">13:46 – 13:58 · 12 min</span><h2>1 · Fundamentos y DDL</h2></div><label class="chk"><input type="checkbox" data-done="b1"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~12 min</span><h2>1 · Fundamentos y DDL</h2></div><label class="chk"><input type="checkbox" data-done="b1"> Terminé</label></div>
  <p>MySQL es un <b>sistema gestor de bases de datos relacional</b>: guarda datos en tablas (filas y columnas) que se relacionan por claves. El motor por defecto es <b>InnoDB</b>, que soporta transacciones y claves foráneas.</p>
 
  <h3>Los 5 sublenguajes de SQL</h3>
@@ -360,7 +360,7 @@ ALTER TABLE productos
 
 <!-- ===================== B2 ===================== -->
 <section class="blk" id="b2">
- <div class="bh"><div><span class="when">13:58 – 14:12 · 14 min</span><h2>2 · DML y consultas</h2></div><label class="chk"><input type="checkbox" data-done="b2"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~14 min</span><h2>2 · DML y consultas</h2></div><label class="chk"><input type="checkbox" data-done="b2"> Terminé</label></div>
 
  <h3>INSERT, UPDATE, DELETE</h3>
 <pre><code>INSERT INTO clientes (nombre, email, ciudad) VALUES ('Ana Ruiz', 'ana@mail.com', 'Salta');
@@ -457,7 +457,7 @@ ORDER BY mes;</code></pre>
 
 <!-- ===================== B3 ===================== -->
 <section class="blk" id="b3">
- <div class="bh"><div><span class="when">14:12 – 14:26 · 14 min</span><h2>3 · JOINs y SQL avanzado</h2></div><label class="chk"><input type="checkbox" data-done="b3"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~14 min</span><h2>3 · JOINs y SQL avanzado</h2></div><label class="chk"><input type="checkbox" data-done="b3"> Terminé</label></div>
 
  <h3>JOINs</h3>
  <div class="scroll"><table>
@@ -615,7 +615,7 @@ SELECT * FROM v_stock_bajo;</code></pre>
 
 <!-- ===================== B4 ===================== -->
 <section class="blk" id="b4" data-sp>
- <div class="bh"><div><span class="when">14:26 – 14:50 · 24 min · foco principal</span><h2>4 · Stored Procedures I</h2></div><label class="chk"><input type="checkbox" data-done="b4"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~24 min · foco principal</span><h2>4 · Stored Procedures I</h2></div><label class="chk"><input type="checkbox" data-done="b4"> Terminé</label></div>
  <p>Un <b>stored procedure</b> (procedimiento almacenado) es un bloque de SQL con nombre, guardado en la base, que se ejecuta con <code>CALL</code>. Recibe parámetros, tiene variables y lógica (IF, bucles), devuelve resultados con SELECT y valores con parámetros OUT.</p>
  <div class="two">
   <div class="note"><b>Ventajas</b><ul><li>Lógica centralizada y reutilizable</li><li>Menos tráfico: una llamada en vez de muchas consultas</li><li>Seguridad: das <code>EXECUTE</code> sin dar acceso a las tablas</li></ul></div>
@@ -917,13 +917,13 @@ CALL sp_resumen_cliente(5);</code></pre>
 
 <!-- ===================== PAUSA ===================== -->
 <section class="blk pausa" id="pausa">
- <div class="bh"><div><span class="when">14:50 – 15:00 · 10 min</span><h2>Descanso</h2></div></div>
- <p>Levantate, tomá agua, mirá lejos de la pantalla. Antes de volver, repasá de memoria (sin mirar): la estructura <code>DELIMITER // CREATE PROCEDURE … BEGIN … END // DELIMITER ;</code>, los tres modos de parámetro y los tres bucles. A las 15:00 arrancás con lo más importante: cursores, handlers y transacciones.</p>
+ <div class="bh"><div><span class="when">Cuando quieras · 10 min</span><h2>Descanso</h2></div></div>
+ <p>Levantate, tomá agua, mirá lejos de la pantalla. Antes de volver, repasá de memoria (sin mirar): la estructura <code>DELIMITER // CREATE PROCEDURE … BEGIN … END // DELIMITER ;</code>, los tres modos de parámetro y los tres bucles. Después seguís con lo más importante: cursores, handlers y transacciones.</p>
 </section>
 
 <!-- ===================== B5 ===================== -->
 <section class="blk" id="b5" data-sp>
- <div class="bh"><div><span class="when">15:00 – 15:25 · 25 min · foco principal</span><h2>5 · Stored Procedures II</h2></div><label class="chk"><input type="checkbox" data-done="b5"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~25 min · foco principal</span><h2>5 · Stored Procedures II</h2></div><label class="chk"><input type="checkbox" data-done="b5"> Terminé</label></div>
 
  <h3>Orden obligatorio de los DECLARE</h3>
  <ol>
@@ -1287,7 +1287,7 @@ CALL sp_reponer_stock(5, 20, @a);  SELECT @a;</code></pre>
 
 <!-- ===================== B6 ===================== -->
 <section class="blk" id="b6">
- <div class="bh"><div><span class="when">15:25 – 15:37 · 12 min</span><h2>6 · Funciones, triggers y eventos</h2></div><label class="chk"><input type="checkbox" data-done="b6"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~12 min</span><h2>6 · Funciones, triggers y eventos</h2></div><label class="chk"><input type="checkbox" data-done="b6"> Terminé</label></div>
 
  <h3>Funciones almacenadas</h3>
 <pre><code>DROP FUNCTION IF EXISTS fn_precio_con_iva;
@@ -1474,7 +1474,7 @@ DROP TRIGGER trg_detalle_ai;</code></pre>
 
 <!-- ===================== B7 ===================== -->
 <section class="blk" id="b7" data-sp>
- <div class="bh"><div><span class="when">15:37 – 15:50 · 13 min</span><h2>7 · Simulacro final</h2></div><label class="chk"><input type="checkbox" data-done="b7"> Terminé</label></div>
+ <div class="bh"><div><span class="when">~13 min</span><h2>7 · Simulacro final</h2></div><label class="chk"><input type="checkbox" data-done="b7"> Terminé</label></div>
 
  <h3>Plantilla de SP con todo, en el orden correcto</h3>
 <pre><code>DROP PROCEDURE IF EXISTS sp_plantilla;
@@ -1773,38 +1773,23 @@ const prog=store.get("mysql-prog",{});
 $$("input[data-done],input[data-mem]").forEach(i=>{
  const key=i.dataset.done?"d-"+i.dataset.done:"m-"+i.dataset.mem;
  i.checked=!!prog[key];
- i.addEventListener("change",()=>{prog[key]=i.checked;store.set("mysql-prog",prog);marks()});
+ i.addEventListener("change",()=>{prog[key]=i.checked;store.set("mysql-prog",prog);marks();if(typeof tick==="function")tick()});
 });
 function marks(){$$("#plan li").forEach(li=>li.classList.toggle("fin",!!prog["d-"+li.dataset.id]))}
 marks();
 
-/* reloj del plan */
-const toMin=s=>{const[h,m]=s.split(":").map(Number);return h*60+m};
-const S=toMin("13:46"),E=toMin("15:50");
-const items=$$("#plan li");
+/* avance a tu ritmo */
+const ids=["b1","b2","b3","b4","b5","b6","b7"],names={b1:"Fundamentos y DDL",b2:"DML y consultas",b3:"JOINs y SQL avanzado",b4:"Stored Procedures I",b5:"Stored Procedures II",b6:"Funciones, triggers y eventos",b7:"Simulacro final"};
 function tick(){
- const d=new Date(),now=d.getHours()*60+d.getMinutes()+d.getSeconds()/60;
- let cur=null;
- items.forEach(li=>{
-  const a=toMin(li.dataset.ini),b=toMin(li.dataset.fin),on=now>=a&&now<b;
-  li.classList.toggle("now",on);li.classList.toggle("past",now>=b);
-  if(on)cur={li,a,b};
- });
- const nm=$("#nowName"),lf=$("#nowLeft"),tot=$("#nowTot"),go=$("#nowGo");
- if(now<S){nm.textContent="Arrancás a las 13:46 con Fundamentos";lf.innerHTML=Math.ceil(S-now)+"<small>min para empezar</small>";go.href="#base";tot.textContent="Mientras, corré la base de práctica"}
- else if(now>=E||!cur){nm.textContent="Terminó el tiempo";lf.innerHTML="✓<small>repasá lo que marcaste como pendiente</small>";go.href="#b7";tot.textContent="Plan completo"}
- else{
-  const left=Math.max(1,Math.ceil(cur.b-now));
-  nm.textContent=cur.li.querySelector("a").textContent;
-  lf.innerHTML=left+"<small>min de este bloque</small>";
-  go.href="#"+cur.li.dataset.id;
-  tot.textContent="Hasta las 15:50 faltan "+Math.ceil(E-now)+" min";
- }
- $("#rail").style.width=Math.min(100,Math.max(0,(now-S)/(E-S)*100))+"%";
- const id=cur?cur.li.dataset.id:"";
- $$("nav.idx a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+id));
+ const hechos=ids.filter(k=>prog["d-"+k]).length,next=ids.find(k=>!prog["d-"+k]);
+ $$("#plan li").forEach(li=>li.classList.toggle("now",li.dataset.id===next));
+ $("#nowName").textContent=next?"Sigue: "+names[next]:"¡Terminaste todo!";
+ $("#nowLeft").innerHTML=hechos+"<small>de 7 bloques terminados</small>";
+ $("#nowGo").href="#"+(next||"b7");
+ $("#rail").style.width=(hechos/7*100)+"%";
+ $$("nav.idx a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+next));
 }
-tick();setInterval(tick,15000);
+tick();
 }
 </script>
 </body>
