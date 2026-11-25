@@ -169,7 +169,7 @@ footer{padding-block:36px 48px;color:var(--mute);font-size:14px}
 <section class="blk" id="base">
  <div class="bh"><div><span class="when">Antes de arrancar</span><h2>La base de práctica</h2></div></div>
  <p>Todos los ejemplos usan esta base <code>tienda</code>. Copiala entera y corrila en MySQL Workbench (rayo ⚡ "Execute") o en la consola <code>mysql</code>. Necesitás MySQL 8.</p>
- <div class="note"><b>Si usás una herramienta online</b> y la línea <code>DELIMITER</code> da error, es porque esa herramienta separa las sentencias sola: sacá las líneas <code>DELIMITER //</code> / <code>DELIMITER ;</code> y cambiá el <code>END //</code> por <code>END</code>.</div>
+ <div class="note"><b>Si usás una herramienta online</b> y la línea <code>DELIMITER</code> da error, es porque esa herramienta separa las sentencias sola: sacá las líneas <code>DELIMITER //</code> / <code>DELIMITER ;</code> y cambiá el <code>END //</code> por <code>END;</code>.<br><b>En OneCompiler</b> borrá las líneas <code>DROP DATABASE</code>, <code>CREATE DATABASE</code> y <code>USE tienda</code> (ya te dan una base y no tenés permiso para crear otra: error 1044). Además no guarda nada entre ejecuciones: dejá siempre la base arriba y el ejemplo abajo.</div>
 <pre><code>-- Base de práctica: tienda
 SET SQL_SAFE_UPDATES = 0;   -- Workbench: permite UPDATE/DELETE sin clave en el WHERE
 DROP DATABASE IF EXISTS tienda;
