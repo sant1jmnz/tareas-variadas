@@ -1,0 +1,1796 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MySQL de punta a punta</title>
+<meta name="description" content="Plan de estudio de MySQL a tu ritmo con foco en stored procedures: teoría, código, trampas, quizzes y ejercicios resueltos.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday: una sesión de estudio contra reloj
+   IDEA el horario de estudio funciona como una consola: el bloque actual se enciende solo
+   PICTURE el plan horario en vivo con horas colgadas grandes, bloque actual resaltado y barra de avance
+   COLOUR blanco / noche #0b1a20, teal MySQL #00758f manda, naranja #f29111 marca SP y "ahora"
+   TYPE IBM Plex Sans 700 + IBM Plex Sans, JetBrains Mono para código
+   LAYOUT laptop: banda con título + tarjeta "ahora", plan a todo el ancho; teléfono: apilado */
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0b1a20);--ink:light-dark(#0f2730,#e3eef1);--mute:light-dark(#4d636c,#9cb3bb);--line:light-dark(#d3e0e4,#21404b);--panel:light-dark(#f1f7f9,#10262e);--teal:light-dark(#00758f,#45c2dc);--deep:light-dark(#00546b,#06323f);--org:light-dark(#b25d00,#f6a540);--orgbg:light-dark(#fff1e0,#33230d);--ok:light-dark(#11733a,#63d391);--okbg:light-dark(#e3f6ea,#0f2c1c);--bad:light-dark(#b3261e,#ff8f86);--badbg:light-dark(#fde8e6,#3a1714);--code:#0d222a}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:62px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(5vw,16px,env(safe-area-inset-left,0px));padding-right:max(5vw,16px,env(safe-area-inset-right,0px))}
+header.top{background:var(--deep);color:#fff;padding-top:calc(env(safe-area-inset-top,0px) + 40px);padding-bottom:36px}
+.hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:32px;align-items:end}
+h1{font-size:clamp(34px,5vw,52px);line-height:1.05;letter-spacing:-.02em;margin:0 0 12px}
+.lead{font-size:17px;margin:0;max-width:56ch;color:#d6eef4}
+.now{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:18px 20px}
+.now .lab{font-size:14px;color:#bfe3ec}
+.now .nm{font-size:22px;font-weight:700;line-height:1.2;margin:2px 0 10px}
+.now .big{font-size:44px;font-weight:700;line-height:1;color:#ffb35c;font-variant-numeric:tabular-nums}
+.now .big small{font-size:16px;color:#fff;font-weight:500;margin-left:6px}
+.rail{height:8px;background:rgba(255,255,255,.18);border-radius:9px;margin:14px 0 8px;overflow:hidden}
+.rail i{display:block;height:100%;width:0;background:#ffb35c;border-radius:9px;transition:width .6s}
+.now .tot{font-size:14px;color:#d6eef4;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.now a{color:#fff;font-weight:600}
+.planw{padding-block:28px 8px}
+.plan{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.plan li{display:grid;grid-template-columns:2.6em minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:13px 12px;border-bottom:1px solid var(--line);border-radius:10px}
+.plan .t{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--teal);white-space:nowrap}
+.plan li.sp .t{color:var(--org)}
+.plan a{color:inherit;text-decoration:none;font-weight:600;font-size:18px}
+.plan a:hover{text-decoration:underline}
+.plan small{display:block;color:var(--mute);font-size:14px;line-height:1.45}
+.plan .m{color:var(--mute);font-size:14px;white-space:nowrap;text-align:right}
+.plan li.now{background:var(--orgbg)}
+.plan li.past{opacity:.55}
+.plan li.fin .m::before{content:"✓ ";color:var(--ok);font-weight:700}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--org);color:#fff;margin-left:8px;vertical-align:middle}
+.plan li:not(.now) .pill.ahora{display:none}
+.sptag{font-size:12px;font-weight:700;color:var(--org);border:1px solid var(--org);border-radius:999px;padding:0 7px;margin-left:8px;vertical-align:middle}
+nav.idx{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.idx .wrap{display:flex;gap:8px;overflow-x:auto;padding-top:10px;padding-bottom:10px;scrollbar-width:none}
+nav.idx a{flex:none;padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--ink);text-decoration:none;font-size:14px;white-space:nowrap}
+nav.idx a.sp{border-color:var(--org);color:var(--org)}
+nav.idx a.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.blk{padding-block:44px;border-bottom:1px solid var(--line)}
+.bh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;margin-bottom:8px}
+.when{color:var(--teal);font-weight:600;font-size:15px}
+.blk[data-sp] .when{color:var(--org)}
+h2{font-size:clamp(28px,3.6vw,40px);line-height:1.1;letter-spacing:-.02em;margin:4px 0 0}
+h3{font-size:21px;line-height:1.25;margin:38px 0 8px;letter-spacing:-.01em}
+p,li{max-width:76ch}
+ul,ol{padding-left:1.3em}
+li{margin:4px 0}
+code{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.88em}
+:not(pre)>code{background:var(--panel);border:1px solid var(--line);padding:1px 5px;border-radius:5px;overflow-wrap:anywhere}
+pre{position:relative;background:var(--code);color:#dbe9ee;border-radius:12px;padding:38px 18px 16px;overflow-x:auto;line-height:1.55;margin:14px 0}
+pre code{font-size:14px;white-space:pre}
+pre .k{color:#62d2ec;font-weight:600}
+pre .s{color:#ffc477}
+pre .n{color:#c9a8ff}
+pre .c{color:#86a1aa;font-style:italic}
+pre .v{color:#8ff0b0}
+.cp{position:absolute;top:8px;right:8px;font:600 12px "IBM Plex Sans",sans-serif;background:#1d3a44;color:#dbe9ee;border:1px solid #2f5662;border-radius:6px;padding:4px 10px;cursor:pointer}
+.cp:hover{background:#28505c}
+.trap{background:var(--orgbg);border-radius:12px;padding:12px 18px;margin:16px 0}
+.trap>b:first-child{color:var(--org)}
+.trap ul{margin:6px 0}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin:16px 0}
+.scroll{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:12px}
+table{border-collapse:collapse;width:100%;font-size:15px;min-width:540px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font-weight:600;background:var(--panel)}
+.quiz{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:26px 0}
+.qh{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.qh h4{margin:0;font-size:19px}
+.score{font-weight:700;color:var(--teal);white-space:nowrap}
+.qi{padding:14px 0 6px;border-top:1px solid var(--line);margin-top:12px}
+.qq{font-weight:600;margin:0 0 8px}
+.opts{display:grid;gap:6px}
+.opts button{font:inherit;font-size:15px;text-align:left;padding:9px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;min-height:44px}
+.opts button:hover:not(:disabled){border-color:var(--teal)}
+.opts button:disabled{cursor:default}
+.opts button.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.opts button.ko{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.exp{margin:8px 0 0;font-size:15px;color:var(--mute)}
+.qreset{font:inherit;font-size:14px;background:none;border:0;color:var(--teal);cursor:pointer;text-decoration:underline;padding:0}
+.ex{margin:22px 0;padding-top:4px}
+details.sol{border:1px solid var(--line);border-radius:12px;margin:10px 0;background:var(--bg)}
+details.sol summary{cursor:pointer;padding:11px 16px;font-weight:600;color:var(--teal)}
+details.sol>div{padding:0 16px 6px}
+.chk{display:inline-flex;gap:8px;align-items:center;font-weight:600;font-size:15px;padding:8px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;user-select:none;white-space:nowrap}
+.chk input{width:18px;height:18px;accent-color:var(--teal)}
+.mem{list-style:none;padding:0;columns:2 300px;column-gap:28px}
+.mem li{break-inside:avoid;margin:0 0 8px}
+.mem label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.mem input{margin-top:5px;width:17px;height:17px;accent-color:var(--org);flex:none}
+.pausa{background:var(--orgbg)}
+.pausa h2{color:var(--org)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px}
+footer{padding-block:36px 48px;color:var(--mute);font-size:14px}
+@media(max-width:760px){.hero{grid-template-columns:minmax(0,1fr)}.two{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:560px){.plan li{grid-template-columns:2.2em minmax(0,1fr);gap:4px 12px}.plan .t{font-size:21px}.plan .m{grid-column:2;text-align:left}pre code{font-size:13px}.now .big{font-size:38px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rail i{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+ <div class="wrap hero">
+  <div>
+   <h1>MySQL de punta a punta</h1>
+   <p class="lead">A tu ritmo, sin horarios: marcás cada bloque como terminado y seguís con el próximo. Casi la mitad del contenido es de stored procedures. Cada bloque trae teoría corta, código para copiar y correr, trampas típicas, quiz y ejercicios con solución.</p>
+  </div>
+  <div class="now" aria-live="polite">
+   <div class="lab">Tu avance</div>
+   <div class="nm" id="nowName">Cargando…</div>
+   <div class="big" id="nowLeft">–</div>
+   <div class="rail"><i id="rail"></i></div>
+   <div class="tot"><span id="nowTot">Marcá "Terminé" al final de cada bloque</span><a id="nowGo" href="#b1">Seguir ↓</a></div>
+  </div>
+ </div>
+</header>
+
+<div class="wrap planw">
+ <ol class="plan" id="plan">
+  <li data-id="b1"><span class="t">1</span><div><a href="#b1">Fundamentos y DDL</a><span class="pill ahora">SIGUE</span><small>Tipos de datos, CREATE, constraints, ALTER, DROP vs TRUNCATE vs DELETE, normalización</small></div><span class="m">~12 min</span></li>
+  <li data-id="b2"><span class="t">2</span><div><a href="#b2">DML y consultas</a><span class="pill ahora">SIGUE</span><small>INSERT, UPDATE, DELETE, SELECT, filtros, funciones, GROUP BY, HAVING</small></div><span class="m">~14 min</span></li>
+  <li data-id="b3"><span class="t">3</span><div><a href="#b3">JOINs y SQL avanzado</a><span class="pill ahora">SIGUE</span><small>JOINs, subconsultas, UNION, CTE, funciones de ventana, vistas, índices, transacciones</small></div><span class="m">~14 min</span></li>
+  <li class="sp" data-id="b4"><span class="t">4</span><div><a href="#b4">Stored Procedures I</a><span class="sptag">SP</span><span class="pill ahora">SIGUE</span><small>DELIMITER, IN / OUT / INOUT, variables, SELECT INTO, IF, CASE, WHILE, REPEAT, LOOP</small></div><span class="m">~24 min</span></li>
+  <li data-id="pausa"><span class="t">☕</span><div><a href="#pausa">Descanso</a><span class="pill ahora">SIGUE</span><small>Cuando lo necesites: pararte, agua, nada de pantalla</small></div><span class="m">~10 min</span></li>
+  <li class="sp" data-id="b5"><span class="t">5</span><div><a href="#b5">Stored Procedures II</a><span class="sptag">SP</span><span class="pill ahora">SIGUE</span><small>Cursores, handlers, SIGNAL / RESIGNAL, transacciones, SQL dinámico, seguridad</small></div><span class="m">~25 min</span></li>
+  <li data-id="b6"><span class="t">6</span><div><a href="#b6">Funciones, triggers y eventos</a><span class="pill ahora">SIGUE</span><small>CREATE FUNCTION, procedure vs función, triggers con NEW / OLD, eventos, usuarios y permisos</small></div><span class="m">~12 min</span></li>
+  <li class="sp" data-id="b7"><span class="t">7</span><div><a href="#b7">Simulacro final</a><span class="sptag">SP</span><span class="pill ahora">SIGUE</span><small>Plantilla de SP, preguntas de examen y ejercicios integradores</small></div><span class="m">~13 min</span></li>
+ </ol>
+</div>
+
+<nav class="idx" aria-label="Bloques">
+ <div class="wrap">
+  <a href="#base">Base de práctica</a>
+  <a href="#b1">1 · Fundamentos</a>
+  <a href="#b2">2 · Consultas</a>
+  <a href="#b3">3 · JOINs</a>
+  <a href="#b4" class="sp">4 · SP I</a>
+  <a href="#pausa">Descanso</a>
+  <a href="#b5" class="sp">5 · SP II</a>
+  <a href="#b6">6 · Funciones y triggers</a>
+  <a href="#b7" class="sp">7 · Simulacro</a>
+ </div>
+</nav>
+
+<main class="wrap">
+
+<!-- ===================== BASE ===================== -->
+<section class="blk" id="base">
+ <div class="bh"><div><span class="when">Antes de arrancar</span><h2>La base de práctica</h2></div></div>
+ <p>Todos los ejemplos usan esta base <code>tienda</code>. Copiala entera y corrila en MySQL Workbench (rayo ⚡ "Execute") o en la consola <code>mysql</code>. Necesitás MySQL 8.</p>
+ <div class="note"><b>Si usás una herramienta online</b> y la línea <code>DELIMITER</code> da error, es porque esa herramienta separa las sentencias sola: sacá las líneas <code>DELIMITER //</code> / <code>DELIMITER ;</code> y cambiá el <code>END //</code> por <code>END;</code>.<br><b>En OneCompiler</b> borrá las líneas <code>DROP DATABASE</code>, <code>CREATE DATABASE</code> y <code>USE tienda</code> (ya te dan una base y no tenés permiso para crear otra: error 1044). Además no guarda nada entre ejecuciones: dejá siempre la base arriba y el ejemplo abajo.</div>
+<pre><code>-- Base de práctica: tienda
+SET SQL_SAFE_UPDATES = 0;   -- Workbench: permite UPDATE/DELETE sin clave en el WHERE
+DROP DATABASE IF EXISTS tienda;
+CREATE DATABASE tienda CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+USE tienda;
+
+CREATE TABLE clientes (
+  id        INT AUTO_INCREMENT PRIMARY KEY,
+  nombre    VARCHAR(80)   NOT NULL,
+  email     VARCHAR(120)  UNIQUE,
+  ciudad    VARCHAR(60)   NOT NULL DEFAULT 'Buenos Aires',
+  saldo     DECIMAL(10,2) NOT NULL DEFAULT 0,
+  creado_en DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE productos (
+  id        INT AUTO_INCREMENT PRIMARY KEY,
+  nombre    VARCHAR(80)   NOT NULL,
+  categoria VARCHAR(40),
+  precio    DECIMAL(10,2) NOT NULL CHECK (precio >= 0),
+  stock     INT NOT NULL DEFAULT 0
+);
+
+CREATE TABLE pedidos (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  cliente_id INT  NOT NULL,
+  fecha      DATE NOT NULL,
+  estado     ENUM('pendiente','pagado','enviado','cancelado') NOT NULL DEFAULT 'pendiente',
+  total      DECIMAL(12,2) NOT NULL DEFAULT 0,
+  CONSTRAINT fk_ped_cli FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE detalle_pedido (
+  pedido_id   INT,
+  producto_id INT,
+  cantidad    INT NOT NULL CHECK (cantidad > 0),
+  precio_unit DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (pedido_id, producto_id),
+  CONSTRAINT fk_det_ped  FOREIGN KEY (pedido_id)   REFERENCES pedidos(id) ON DELETE CASCADE,
+  CONSTRAINT fk_det_prod FOREIGN KEY (producto_id) REFERENCES productos(id)
+);
+
+CREATE TABLE log_auditoria (
+  id      INT AUTO_INCREMENT PRIMARY KEY,
+  tabla   VARCHAR(40),
+  accion  VARCHAR(30),
+  detalle VARCHAR(255),
+  fecha   DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO clientes (nombre, email, ciudad, saldo) VALUES
+('Martina Gómez',   'martina@mail.com', 'Rosario',      25000),
+('Lucas Fernández', 'lucas@mail.com',   'Córdoba',      12000),
+('Valentina Díaz',  'valen@mail.com',   'Rosario',       8000),
+('Mateo López',     NULL,               'Buenos Aires',     0),
+('Camila Torres',   'camila@mail.com',  'Mendoza',      40000),
+('Tomás Romero',    'tomas@mail.com',   'Córdoba',       3000);
+
+INSERT INTO productos (nombre, categoria, precio, stock) VALUES
+('Notebook 14',           'Electrónica', 850000,  5),
+('Mouse inalámbrico',     'Electrónica',  18000, 40),
+('Auriculares',           'Electrónica',  45000,  3),
+('Cafetera',              'Hogar',        95000,  8),
+('Juego de sábanas',      'Hogar',        38000,  0),
+('Lámpara de escritorio', 'Hogar',        27000, 12),
+('Mate de calabaza',      'Bazar',        12000, 25),
+('Termo 1L',              'Bazar',        55000,  2);
+
+INSERT INTO pedidos (cliente_id, fecha, estado) VALUES
+(1, '2026-09-05', 'enviado'),
+(1, '2026-10-12', 'pagado'),
+(2, '2026-10-20', 'pendiente'),
+(3, '2026-11-02', 'cancelado'),
+(5, '2026-11-10', 'pagado'),
+(5, '2026-11-18', 'pendiente'),
+(6, '2026-11-21', 'pagado');
+
+INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, precio_unit) VALUES
+(1, 1, 1, 850000), (1, 2, 1, 18000),
+(2, 7, 2, 12000),  (2, 8, 1, 55000),
+(3, 4, 1, 95000),
+(4, 3, 1, 45000),
+(5, 2, 2, 18000),  (5, 6, 1, 27000), (5, 7, 1, 12000),
+(6, 4, 1, 95000),
+(7, 7, 3, 12000);
+
+-- el total de cada pedido = suma de su detalle
+UPDATE pedidos p
+SET total = (SELECT SUM(d.cantidad * d.precio_unit)
+             FROM detalle_pedido d WHERE d.pedido_id = p.id);</code></pre>
+ <p>Lo que hay adentro: 6 clientes (Mateo no tiene pedidos ni email), 8 productos (las sábanas nunca se vendieron), 7 pedidos (el 4 está cancelado) y una tabla <code>log_auditoria</code> para triggers y SP.</p>
+</section>
+
+<!-- ===================== B1 ===================== -->
+<section class="blk" id="b1">
+ <div class="bh"><div><span class="when">~12 min</span><h2>1 · Fundamentos y DDL</h2></div><label class="chk"><input type="checkbox" data-done="b1"> Terminé</label></div>
+ <p>MySQL es un <b>sistema gestor de bases de datos relacional</b>: guarda datos en tablas (filas y columnas) que se relacionan por claves. El motor por defecto es <b>InnoDB</b>, que soporta transacciones y claves foráneas.</p>
+
+ <h3>Los 5 sublenguajes de SQL</h3>
+ <div class="scroll"><table>
+  <tr><th>Sigla</th><th>Para qué</th><th>Sentencias</th></tr>
+  <tr><td><b>DDL</b> (definición)</td><td>Crear y cambiar la estructura</td><td><code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>, <code>RENAME</code></td></tr>
+  <tr><td><b>DML</b> (manipulación)</td><td>Cambiar los datos</td><td><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code></td></tr>
+  <tr><td><b>DQL</b> (consulta)</td><td>Leer datos</td><td><code>SELECT</code></td></tr>
+  <tr><td><b>DCL</b> (control)</td><td>Permisos</td><td><code>GRANT</code>, <code>REVOKE</code></td></tr>
+  <tr><td><b>TCL</b> (transacciones)</td><td>Confirmar o deshacer</td><td><code>START TRANSACTION</code>, <code>COMMIT</code>, <code>ROLLBACK</code>, <code>SAVEPOINT</code></td></tr>
+ </table></div>
+
+ <h3>Tipos de datos</h3>
+ <div class="scroll"><table>
+  <tr><th>Grupo</th><th>Tipos</th><th>Qué saber</th></tr>
+  <tr><td>Enteros</td><td><code>TINYINT</code>, <code>SMALLINT</code>, <code>MEDIUMINT</code>, <code>INT</code>, <code>BIGINT</code></td><td>1, 2, 3, 4 y 8 bytes. <code>INT</code> llega a ±2.147 millones. <code>UNSIGNED</code> = sin negativos, duplica el máximo.</td></tr>
+  <tr><td>Exactos</td><td><code>DECIMAL(p,s)</code></td><td><code>DECIMAL(10,2)</code> = 10 dígitos en total, 2 decimales. <b>Siempre para plata.</b></td></tr>
+  <tr><td>Aproximados</td><td><code>FLOAT</code>, <code>DOUBLE</code></td><td>Tienen error de redondeo. Nunca para dinero.</td></tr>
+  <tr><td>Texto</td><td><code>CHAR(n)</code>, <code>VARCHAR(n)</code>, <code>TEXT</code></td><td>CHAR es largo fijo (rellena con espacios), VARCHAR variable hasta n <b>caracteres</b>. TEXT para textos largos.</td></tr>
+  <tr><td>Fecha y hora</td><td><code>DATE</code>, <code>TIME</code>, <code>DATETIME</code>, <code>TIMESTAMP</code>, <code>YEAR</code></td><td>Formato <code>'2026-11-25 13:46:00'</code>. TIMESTAMP se guarda en UTC, se convierte a la zona de la sesión y llega hasta 2038.</td></tr>
+  <tr><td>Otros</td><td><code>BOOLEAN</code>, <code>ENUM</code>, <code>SET</code>, <code>JSON</code>, <code>BLOB</code></td><td>BOOLEAN es <code>TINYINT(1)</code> (TRUE = 1). ENUM = un valor de una lista fija.</td></tr>
+ </table></div>
+
+ <h3>Restricciones (constraints)</h3>
+ <ul>
+  <li><b>PRIMARY KEY</b>: identifica cada fila. Única y NOT NULL. Una sola por tabla, pero puede ser compuesta: <code>PRIMARY KEY (pedido_id, producto_id)</code>.</li>
+  <li><b>AUTO_INCREMENT</b>: numera solo. <code>LAST_INSERT_ID()</code> devuelve el último id generado <b>en tu conexión</b>.</li>
+  <li><b>FOREIGN KEY … REFERENCES</b>: integridad referencial. Acciones <code>ON DELETE</code> / <code>ON UPDATE</code>:
+   <code>RESTRICT</code> o <code>NO ACTION</code> (default: no deja borrar el padre si tiene hijos), <code>CASCADE</code> (borra/actualiza los hijos), <code>SET NULL</code> (pone NULL en el hijo).</li>
+  <li><b>UNIQUE</b>: sin repetidos (admite varios NULL). <b>NOT NULL</b>. <b>DEFAULT</b> valor.</li>
+  <li><b>CHECK (condición)</b>: se valida desde MySQL 8.0.16 (antes se ignoraba).</li>
+ </ul>
+
+ <h3>Comandos para orientarte y ALTER</h3>
+<pre><code>SHOW DATABASES;
+USE tienda;
+SHOW TABLES;
+DESCRIBE clientes;              -- columnas y tipos
+SHOW CREATE TABLE pedidos;      -- el CREATE completo, con FKs
+
+ALTER TABLE clientes ADD COLUMN telefono VARCHAR(20) AFTER email;
+ALTER TABLE clientes MODIFY telefono VARCHAR(30) NOT NULL DEFAULT '';   -- cambia tipo/atributos
+ALTER TABLE clientes CHANGE telefono celular VARCHAR(30);               -- renombra + tipo
+ALTER TABLE clientes RENAME COLUMN celular TO tel;                       -- solo renombra
+ALTER TABLE clientes DROP COLUMN tel;
+ALTER TABLE productos ADD CONSTRAINT chk_stock CHECK (stock >= 0);
+-- RENAME TABLE viejo TO nuevo;     DROP TABLE IF EXISTS t;
+
+-- comentarios: "-- " (con espacio), "#" o /* bloque */</code></pre>
+
+ <h3>DELETE vs TRUNCATE vs DROP</h3>
+ <div class="scroll"><table>
+  <tr><th></th><th>DELETE FROM t</th><th>TRUNCATE TABLE t</th><th>DROP TABLE t</th></tr>
+  <tr><td>Tipo</td><td>DML</td><td>DDL</td><td>DDL</td></tr>
+  <tr><td>Qué borra</td><td>Filas (admite WHERE)</td><td>Todas las filas</td><td>Tabla entera (estructura + datos)</td></tr>
+  <tr><td>ROLLBACK</td><td>Sí</td><td>No (COMMIT implícito)</td><td>No</td></tr>
+  <tr><td>Triggers</td><td>Los dispara</td><td>No</td><td>No</td></tr>
+  <tr><td>AUTO_INCREMENT</td><td>Sigue igual</td><td>Vuelve a 1</td><td>—</td></tr>
+ </table></div>
+
+ <h3>Normalización en 3 líneas</h3>
+ <ul>
+  <li><b>1FN</b>: valores atómicos, sin grupos repetidos (nada de <code>tel1, tel2, tel3</code> ni listas en una celda).</li>
+  <li><b>2FN</b>: 1FN + cada columna no clave depende de <b>toda</b> la clave. En <code>detalle_pedido(pedido_id, producto_id, nombre_producto)</code> el nombre depende solo de producto_id: va en <code>productos</code>.</li>
+  <li><b>3FN</b>: 2FN + sin dependencias transitivas. <code>pedidos.ciudad_cliente</code> depende del cliente, no del pedido: va en <code>clientes</code>.</li>
+ </ul>
+
+ <div class="trap"><b>Trampas</b><ul>
+  <li><code>VARCHAR(n)</code> cuenta caracteres, no bytes. Usá <code>utf8mb4</code> (el <code>utf8</code> viejo no guarda emojis).</li>
+  <li>Collation <code>utf8mb4_0900_ai_ci</code>: <b>a</b>ccent <b>i</b>nsensitive, <b>c</b>ase <b>i</b>nsensitive. <code>'electronica'</code> encuentra <code>'Electrónica'</code>.</li>
+  <li>Para una FK, las dos columnas deben tener el mismo tipo (INT con INT, ambos UNSIGNED o ninguno) y la tabla padre debe existir antes.</li>
+ </ul></div>
+
+ <div class="quiz" data-q="b1"></div>
+
+ <div class="ex"><p><b>Ejercicio.</b> Creá <code>proveedores</code> (id autoincremental, nombre obligatorio, cuit único de 13 caracteres, email, activo booleano verdadero por defecto) y agregá a <code>productos</code> una columna <code>proveedor_id</code> con FK que quede en NULL si se borra el proveedor.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>CREATE TABLE proveedores (
+  id     INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(80) NOT NULL,
+  cuit   CHAR(13) UNIQUE,
+  email  VARCHAR(120),
+  activo BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+ALTER TABLE productos
+  ADD COLUMN proveedor_id INT NULL,
+  ADD CONSTRAINT fk_prod_prov FOREIGN KEY (proveedor_id)
+      REFERENCES proveedores(id) ON DELETE SET NULL;</code></pre>
+ </div></details></div>
+</section>
+
+<!-- ===================== B2 ===================== -->
+<section class="blk" id="b2">
+ <div class="bh"><div><span class="when">~14 min</span><h2>2 · DML y consultas</h2></div><label class="chk"><input type="checkbox" data-done="b2"> Terminé</label></div>
+
+ <h3>INSERT, UPDATE, DELETE</h3>
+<pre><code>INSERT INTO clientes (nombre, email, ciudad) VALUES ('Ana Ruiz', 'ana@mail.com', 'Salta');
+INSERT INTO clientes (nombre, email) VALUES ('Juan Paz', 'juan@mail.com'), ('Eva Sosa', 'eva@mail.com');
+
+-- si choca con una PK/UNIQUE, en vez de error actualiza
+INSERT INTO clientes (id, nombre, email) VALUES (1, 'Martina Gómez', 'martina@mail.com')
+ON DUPLICATE KEY UPDATE saldo = saldo + 500;
+
+-- INSERT ... SELECT: copia filas desde una consulta
+INSERT INTO log_auditoria (tabla, accion, detalle)
+SELECT 'clientes', 'backup', nombre FROM clientes WHERE ciudad = 'Córdoba';
+
+UPDATE productos SET precio = precio * 1.10 WHERE categoria = 'Electrónica';
+UPDATE clientes SET saldo = 0, ciudad = 'Mendoza' WHERE id = 3;
+DELETE FROM log_auditoria WHERE accion = 'backup';</code></pre>
+ <p>También existen <code>INSERT IGNORE</code> (si hay duplicado, lo saltea con un warning) y <code>REPLACE INTO</code> (si hay duplicado, borra la fila vieja e inserta la nueva).</p>
+ <div class="trap"><b>Trampa:</b> <code>UPDATE</code> o <code>DELETE</code> sin <code>WHERE</code> afecta <b>toda</b> la tabla. Workbench trae "safe updates" que lo bloquea con el <b>error 1175</b>; se apaga con <code>SET SQL_SAFE_UPDATES = 0;</code></div>
+
+ <h3>Anatomía del SELECT y orden de ejecución</h3>
+<pre><code>SELECT   categoria, COUNT(*) AS cant, AVG(precio) AS promedio   -- 5
+FROM     productos                                             -- 1
+WHERE    stock > 0                                             -- 2
+GROUP BY categoria                                             -- 3
+HAVING   COUNT(*) >= 2                                         -- 4
+ORDER BY promedio DESC                                         -- 6
+LIMIT    3;                                                    -- 7</code></pre>
+ <p>Se escribe en un orden pero se ejecuta en otro: <b>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</b>. Por eso en el WHERE no podés usar un alias del SELECT, y en el ORDER BY sí (MySQL además lo permite en HAVING).</p>
+
+ <h3>Filtros</h3>
+<pre><code>SELECT * FROM productos WHERE precio BETWEEN 10000 AND 50000;   -- incluye los extremos
+SELECT * FROM clientes  WHERE ciudad IN ('Rosario', 'Córdoba');
+SELECT * FROM clientes  WHERE nombre LIKE 'M%';      -- empieza con M
+SELECT * FROM clientes  WHERE nombre LIKE '_a%';     -- la 2ª letra es "a"
+SELECT * FROM clientes  WHERE email IS NULL;         -- nunca "= NULL"
+SELECT * FROM productos WHERE NOT (categoria = 'Hogar' OR stock = 0);
+SELECT DISTINCT ciudad FROM clientes;
+SELECT * FROM productos ORDER BY categoria ASC, precio DESC LIMIT 3 OFFSET 3;  -- "página 2"</code></pre>
+
+ <h3>Funciones que más se usan</h3>
+ <div class="scroll"><table>
+  <tr><th>Grupo</th><th>Funciones</th></tr>
+  <tr><td>Texto</td><td><code>CONCAT('a','b')</code>, <code>CONCAT_WS(', ', a, b)</code>, <code>UPPER</code>, <code>LOWER</code>, <code>SUBSTRING(s,1,3)</code>, <code>LEFT</code>, <code>RIGHT</code>, <code>CHAR_LENGTH</code> (caracteres) vs <code>LENGTH</code> (bytes), <code>TRIM</code>, <code>REPLACE</code>, <code>LPAD('7',3,'0')</code> = <code>'007'</code></td></tr>
+  <tr><td>Números</td><td><code>ROUND(2.567,2)</code> = 2.57, <code>TRUNCATE(2.567,2)</code> = 2.56, <code>CEIL(2.1)</code> = 3, <code>FLOOR(2.9)</code> = 2, <code>MOD(10,3)</code> = 1, <code>ABS</code>, <code>RAND()</code></td></tr>
+  <tr><td>Fechas</td><td><code>NOW()</code>, <code>CURDATE()</code>, <code>YEAR(f)</code>, <code>MONTH(f)</code>, <code>DATEDIFF('2026-12-31','2026-11-25')</code> = 36, <code>DATE_ADD(f, INTERVAL 7 DAY)</code>, <code>f - INTERVAL 1 MONTH</code>, <code>DATE_FORMAT(f,'%d/%m/%Y')</code>, <code>TIMESTAMPDIFF(YEAR, nac, CURDATE())</code>, <code>LAST_DAY(f)</code></td></tr>
+  <tr><td>Control</td><td><code>IF(cond, a, b)</code>, <code>IFNULL(x, 0)</code>, <code>COALESCE(a, b, c)</code> (primer no NULL), <code>NULLIF(a, b)</code> (NULL si son iguales: <code>x / NULLIF(y, 0)</code> evita dividir por cero), <code>CASE WHEN … THEN … ELSE … END</code></td></tr>
+ </table></div>
+<pre><code>SELECT nombre, precio,
+  CASE WHEN precio < 20000  THEN 'barato'
+       WHEN precio < 100000 THEN 'medio'
+       ELSE 'caro' END AS rango
+FROM productos;</code></pre>
+
+ <h3>Agregados, GROUP BY y HAVING</h3>
+<pre><code>SELECT COUNT(*)               FROM clientes;   -- 6: cuenta filas
+SELECT COUNT(email)           FROM clientes;   -- 5: cuenta NO nulos
+SELECT COUNT(DISTINCT ciudad) FROM clientes;   -- 4
+
+SELECT cliente_id, COUNT(*) AS pedidos, SUM(total) AS gastado
+FROM pedidos
+WHERE estado <> 'cancelado'      -- filtra FILAS antes de agrupar
+GROUP BY cliente_id
+HAVING SUM(total) > 50000;       -- filtra GRUPOS después de agrupar</code></pre>
+ <div class="trap"><b>Trampas</b><ul>
+  <li><b>ONLY_FULL_GROUP_BY</b> (activo en MySQL 8): toda columna del SELECT que no esté en el GROUP BY tiene que ir dentro de un agregado. Si no, error 1055.</li>
+  <li>Los agregados ignoran NULL (menos <code>COUNT(*)</code>): <code>AVG</code> de 10, NULL, 20 es 15.</li>
+  <li><code>NULL = NULL</code> no es verdadero, es NULL. Usá <code>IS NULL</code>, <code>IS NOT NULL</code> o <code>&lt;=&gt;</code> (igualdad que acepta NULL).</li>
+ </ul></div>
+
+ <div class="quiz" data-q="b2"></div>
+
+ <div class="ex"><p><b>Ejercicio.</b> (a) Nombre y precio con IVA (21 %, 2 decimales) de los productos con stock menor a 10, del más caro al más barato. (b) Por ciudad: cantidad de clientes y saldo promedio, solo ciudades con más de 1 cliente. (c) Total facturado por mes en 2026, sin cancelados.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>-- a
+SELECT nombre, ROUND(precio * 1.21, 2) AS precio_iva
+FROM productos
+WHERE stock < 10
+ORDER BY precio DESC;
+
+-- b  (Rosario 2 · 16500 / Córdoba 2 · 7500)
+SELECT ciudad, COUNT(*) AS clientes, ROUND(AVG(saldo), 2) AS saldo_prom
+FROM clientes
+GROUP BY ciudad
+HAVING COUNT(*) > 1;
+
+-- c  (9 → 868000 / 10 → 174000 / 11 → 206000)
+SELECT MONTH(fecha) AS mes, SUM(total) AS facturado
+FROM pedidos
+WHERE YEAR(fecha) = 2026 AND estado <> 'cancelado'
+GROUP BY MONTH(fecha)
+ORDER BY mes;</code></pre>
+ </div></details></div>
+</section>
+
+<!-- ===================== B3 ===================== -->
+<section class="blk" id="b3">
+ <div class="bh"><div><span class="when">~14 min</span><h2>3 · JOINs y SQL avanzado</h2></div><label class="chk"><input type="checkbox" data-done="b3"> Terminé</label></div>
+
+ <h3>JOINs</h3>
+ <div class="scroll"><table>
+  <tr><th>Tipo</th><th>Devuelve</th></tr>
+  <tr><td><code>INNER JOIN</code> (o <code>JOIN</code>)</td><td>Solo las filas que coinciden en las dos tablas</td></tr>
+  <tr><td><code>LEFT JOIN</code></td><td>Todas las de la izquierda + las que coinciden; si no hay match, NULL a la derecha</td></tr>
+  <tr><td><code>RIGHT JOIN</code></td><td>Lo mismo pero al revés</td></tr>
+  <tr><td><code>CROSS JOIN</code></td><td>Todas las combinaciones (producto cartesiano)</td></tr>
+  <tr><td>Self join</td><td>Una tabla consigo misma con dos alias (ej. empleado y su jefe)</td></tr>
+  <tr><td>FULL OUTER</td><td><b>No existe en MySQL</b>: se arma con <code>LEFT JOIN … UNION … RIGHT JOIN</code></td></tr>
+ </table></div>
+<pre><code>-- INNER: clientes con sus pedidos
+SELECT c.nombre, p.id AS pedido, p.total
+FROM clientes c
+INNER JOIN pedidos p ON p.cliente_id = c.id;
+
+-- LEFT: todos los clientes, aunque no tengan pedidos
+SELECT c.nombre, COUNT(p.id) AS cant_pedidos      -- COUNT(p.id), no COUNT(*)
+FROM clientes c
+LEFT JOIN pedidos p ON p.cliente_id = c.id
+GROUP BY c.id, c.nombre;
+
+-- clientes SIN pedidos (anti-join)
+SELECT c.nombre
+FROM clientes c
+LEFT JOIN pedidos p ON p.cliente_id = c.id
+WHERE p.id IS NULL;
+
+-- 4 tablas: qué compró cada cliente
+SELECT c.nombre, pr.nombre AS producto, d.cantidad,
+       d.cantidad * d.precio_unit AS subtotal
+FROM clientes c
+JOIN pedidos p        ON p.cliente_id = c.id
+JOIN detalle_pedido d ON d.pedido_id  = p.id
+JOIN productos pr     ON pr.id        = d.producto_id;</code></pre>
+ <div class="trap"><b>Trampas</b><ul>
+  <li>En un LEFT JOIN, <code>COUNT(*)</code> cuenta 1 para el cliente sin pedidos. Contá una columna de la derecha: <code>COUNT(p.id)</code>.</li>
+  <li>Poner una condición sobre la tabla de la derecha en el <code>WHERE</code> convierte el LEFT JOIN en INNER. Ponela en el <code>ON</code>: <code>LEFT JOIN pedidos p ON p.cliente_id = c.id AND p.estado = 'pagado'</code>.</li>
+ </ul></div>
+
+ <h3>Subconsultas</h3>
+<pre><code>-- escalar: productos más caros que el promedio
+SELECT nombre, precio FROM productos
+WHERE precio > (SELECT AVG(precio) FROM productos);
+
+-- IN: clientes que compraron algo
+SELECT nombre FROM clientes
+WHERE id IN (SELECT cliente_id FROM pedidos);
+
+-- correlacionada con NOT EXISTS: productos que nunca se vendieron
+SELECT nombre FROM productos pr
+WHERE NOT EXISTS (SELECT 1 FROM detalle_pedido d WHERE d.producto_id = pr.id);
+
+-- tabla derivada en el FROM (necesita alias)
+SELECT AVG(gastado) FROM (
+  SELECT cliente_id, SUM(total) AS gastado FROM pedidos GROUP BY cliente_id
+) AS t;</code></pre>
+ <div class="trap"><b>Trampa:</b> <code>NOT IN (subconsulta)</code> no devuelve nada si la subconsulta trae algún NULL. Usá <code>NOT EXISTS</code>.</div>
+
+ <h3>UNION</h3>
+ <p><code>UNION</code> junta resultados y elimina duplicados; <code>UNION ALL</code> los mantiene (y es más rápido). Mismo número de columnas y tipos compatibles; los nombres los pone el primer SELECT; el <code>ORDER BY</code> va al final.</p>
+
+ <h3>CTE (WITH) y CTE recursiva</h3>
+<pre><code>WITH gasto AS (
+  SELECT cliente_id, SUM(total) AS total_gastado
+  FROM pedidos WHERE estado <> 'cancelado'
+  GROUP BY cliente_id
+)
+SELECT c.nombre, g.total_gastado
+FROM gasto g JOIN clientes c ON c.id = g.cliente_id
+ORDER BY g.total_gastado DESC;
+
+WITH RECURSIVE n AS (
+  SELECT 1 AS x            -- caso base
+  UNION ALL
+  SELECT x + 1 FROM n WHERE x < 10   -- paso recursivo
+)
+SELECT x FROM n;</code></pre>
+
+ <h3>Funciones de ventana (MySQL 8)</h3>
+ <p>Calculan sobre un grupo de filas <b>sin colapsarlas</b> (a diferencia de GROUP BY).</p>
+<pre><code>SELECT nombre, categoria, precio,
+  ROW_NUMBER() OVER (PARTITION BY categoria ORDER BY precio DESC) AS puesto_en_cat,
+  RANK()       OVER (ORDER BY precio DESC) AS ranking,        -- 1,2,2,4
+  DENSE_RANK() OVER (ORDER BY precio DESC) AS ranking_denso,  -- 1,2,2,3
+  SUM(precio)  OVER (PARTITION BY categoria) AS total_cat,
+  LAG(precio)  OVER (ORDER BY precio) AS precio_anterior      -- LEAD = el siguiente
+FROM productos;</code></pre>
+
+ <h3>Vistas</h3>
+<pre><code>CREATE OR REPLACE VIEW v_ventas AS
+SELECT p.id, c.nombre AS cliente, p.fecha, p.estado, p.total
+FROM pedidos p JOIN clientes c ON c.id = p.cliente_id;
+
+SELECT * FROM v_ventas WHERE estado = 'pagado';
+-- DROP VIEW v_ventas;</code></pre>
+ <p>Una vista es una consulta guardada con nombre: <b>no guarda datos</b>. Es actualizable solo si es simple (una tabla, sin GROUP BY, DISTINCT, agregados ni UNION). <code>WITH CHECK OPTION</code> impide insertar o modificar filas que la vista no mostraría.</p>
+
+ <h3>Índices</h3>
+<pre><code>CREATE INDEX idx_prod_cat      ON productos(categoria);
+CREATE INDEX idx_ped_cli_fecha ON pedidos(cliente_id, fecha);   -- compuesto
+SHOW INDEX FROM pedidos;
+EXPLAIN SELECT * FROM pedidos WHERE cliente_id = 5 AND fecha >= '2026-11-01';
+-- DROP INDEX idx_prod_cat ON productos;</code></pre>
+ <ul>
+  <li>Aceleran WHERE, JOIN y ORDER BY; frenan INSERT/UPDATE/DELETE y ocupan espacio.</li>
+  <li>PK y UNIQUE crean índice solos; en InnoDB las FK también.</li>
+  <li><b>Prefijo izquierdo</b>: un índice <code>(a, b)</code> sirve para filtrar por <code>a</code> o por <code>a y b</code>, no solo por <code>b</code>.</li>
+  <li>Una función sobre la columna anula el índice: en vez de <code>YEAR(fecha) = 2026</code> usá <code>fecha >= '2026-01-01' AND fecha &lt; '2027-01-01'</code>. <code>LIKE 'abc%'</code> usa índice; <code>LIKE '%abc'</code> no.</li>
+ </ul>
+
+ <h3>Transacciones</h3>
+<pre><code>START TRANSACTION;
+  UPDATE clientes SET saldo = saldo - 1000 WHERE id = 1;
+  UPDATE clientes SET saldo = saldo + 1000 WHERE id = 2;
+COMMIT;            -- o ROLLBACK; para deshacer todo
+
+START TRANSACTION;
+  INSERT INTO log_auditoria (tabla, accion) VALUES ('demo', 'a');
+  SAVEPOINT s1;
+  DELETE FROM log_auditoria;
+  ROLLBACK TO SAVEPOINT s1;   -- deshace solo el DELETE
+COMMIT;</code></pre>
+ <ul>
+  <li><b>ACID</b>: Atomicidad (todo o nada), Consistencia (respeta las reglas), Aislamiento (las transacciones no se pisan), Durabilidad (lo confirmado sobrevive a una caída).</li>
+  <li><code>autocommit = 1</code> por defecto: cada sentencia suelta se confirma sola. Las DDL (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>TRUNCATE</code>) hacen <b>COMMIT implícito</b>. MyISAM no soporta transacciones; InnoDB sí.</li>
+  <li><b>Niveles de aislamiento</b>: READ UNCOMMITTED (lecturas sucias), READ COMMITTED, <b>REPEATABLE READ (default de InnoDB)</b>, SERIALIZABLE. Problemas que evitan: dirty read, non-repeatable read, phantom read.</li>
+ </ul>
+
+ <div class="quiz" data-q="b3"></div>
+
+ <div class="ex"><p><b>Ejercicio.</b> (a) Cada cliente y cuánto gastó (incluidos los que gastaron 0, sin cancelados), de mayor a menor. (b) El producto más vendido en unidades. (c) Una vista <code>v_stock_bajo</code> con los productos de stock menor a 5.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>-- a
+SELECT c.nombre, IFNULL(SUM(p.total), 0) AS gastado
+FROM clientes c
+LEFT JOIN pedidos p ON p.cliente_id = c.id AND p.estado <> 'cancelado'
+GROUP BY c.id, c.nombre
+ORDER BY gastado DESC;
+
+-- b  (Mate de calabaza, 6 unidades)
+SELECT pr.nombre, SUM(d.cantidad) AS unidades
+FROM detalle_pedido d
+JOIN productos pr ON pr.id = d.producto_id
+GROUP BY pr.id, pr.nombre
+ORDER BY unidades DESC
+LIMIT 1;
+
+-- c
+CREATE OR REPLACE VIEW v_stock_bajo AS
+SELECT id, nombre, stock FROM productos WHERE stock < 5;
+SELECT * FROM v_stock_bajo;</code></pre>
+ </div></details></div>
+</section>
+
+<!-- ===================== B4 ===================== -->
+<section class="blk" id="b4" data-sp>
+ <div class="bh"><div><span class="when">~24 min · foco principal</span><h2>4 · Stored Procedures I</h2></div><label class="chk"><input type="checkbox" data-done="b4"> Terminé</label></div>
+ <p>Un <b>stored procedure</b> (procedimiento almacenado) es un bloque de SQL con nombre, guardado en la base, que se ejecuta con <code>CALL</code>. Recibe parámetros, tiene variables y lógica (IF, bucles), devuelve resultados con SELECT y valores con parámetros OUT.</p>
+ <div class="two">
+  <div class="note"><b>Ventajas</b><ul><li>Lógica centralizada y reutilizable</li><li>Menos tráfico: una llamada en vez de muchas consultas</li><li>Seguridad: das <code>EXECUTE</code> sin dar acceso a las tablas</li></ul></div>
+  <div class="note"><b>Desventajas</b><ul><li>Difícil de depurar y versionar</li><li>Ata la lógica al motor (poco portable)</li><li>Mucha lógica en la base complica escalar</li></ul></div>
+ </div>
+
+ <h3>Anatomía completa</h3>
+<pre><code>DELIMITER //                                -- 1. cambio el delimitador del cliente
+CREATE PROCEDURE nombre_sp(                 -- 2. nombre
+    IN  p_entrada INT,                      -- 3. parámetros: IN | OUT | INOUT
+    OUT p_salida  VARCHAR(50)
+)
+COMMENT 'Qué hace'                          -- 4. características (opcionales)
+BEGIN                                       -- 5. cuerpo
+    DECLARE v_aux INT DEFAULT 0;            --    los DECLARE siempre al principio
+    SET v_aux = p_entrada * 2;
+    SET p_salida = CONCAT('Resultado: ', v_aux);
+END //                                      -- 6. termina con el delimitador nuevo
+DELIMITER ;                                 -- 7. vuelvo al ;
+
+CALL nombre_sp(5, @resultado);
+SELECT @resultado;                          -- Resultado: 10</code></pre>
+ <div class="note"><b>¿Por qué DELIMITER?</b> El cliente (Workbench, consola) manda la sentencia al servidor cuando ve un <code>;</code>. El cuerpo del SP tiene muchos <code>;</code> y se cortaría a la mitad. Con <code>DELIMITER //</code> le decís "la sentencia termina en <code>//</code>". <b>DELIMITER no es SQL</b>: es un comando del cliente. Desde PHP, Python o Java no se usa.</div>
+
+ <h3>Sin parámetros</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_listar_productos;
+DELIMITER //
+CREATE PROCEDURE sp_listar_productos()
+BEGIN
+  SELECT id, nombre, precio, stock
+  FROM productos
+  ORDER BY precio DESC;
+END //
+DELIMITER ;
+
+CALL sp_listar_productos();</code></pre>
+
+ <h3>Parámetros IN, OUT, INOUT</h3>
+ <div class="scroll"><table>
+  <tr><th>Modo</th><th>Entra</th><th>Sale</th><th>Detalle</th></tr>
+  <tr><td><b>IN</b> (default)</td><td>Sí</td><td>No</td><td>Si lo cambiás adentro, afuera no se entera. Acepta literales: <code>CALL sp(5)</code>.</td></tr>
+  <tr><td><b>OUT</b></td><td>No</td><td>Sí</td><td>Adentro <b>empieza en NULL</b> (no ve el valor de afuera). Se recibe en una variable: <code>CALL sp(@x)</code>.</td></tr>
+  <tr><td><b>INOUT</b></td><td>Sí</td><td>Sí</td><td>Entra un valor, se modifica y sale. También necesita variable.</td></tr>
+ </table></div>
+<pre><code>-- IN
+DROP PROCEDURE IF EXISTS sp_productos_por_categoria;
+DELIMITER //
+CREATE PROCEDURE sp_productos_por_categoria(IN p_categoria VARCHAR(40))
+BEGIN
+  SELECT nombre, precio FROM productos
+  WHERE categoria = p_categoria;
+END //
+DELIMITER ;
+CALL sp_productos_por_categoria('Hogar');
+
+-- OUT
+DROP PROCEDURE IF EXISTS sp_contar_pedidos;
+DELIMITER //
+CREATE PROCEDURE sp_contar_pedidos(IN p_cliente INT, OUT p_cantidad INT)
+BEGIN
+  SELECT COUNT(*) INTO p_cantidad
+  FROM pedidos WHERE cliente_id = p_cliente;
+END //
+DELIMITER ;
+CALL sp_contar_pedidos(1, @cant);
+SELECT @cant;                 -- 2
+
+-- INOUT
+DROP PROCEDURE IF EXISTS sp_aplicar_iva;
+DELIMITER //
+CREATE PROCEDURE sp_aplicar_iva(INOUT p_monto DECIMAL(12,2))
+BEGIN
+  SET p_monto = p_monto * 1.21;
+END //
+DELIMITER ;
+SET @m = 1000;
+CALL sp_aplicar_iva(@m);
+SELECT @m;                    -- 1210.00</code></pre>
+
+ <h3>Variables</h3>
+ <div class="scroll"><table>
+  <tr><th>Tipo</th><th>Cómo</th><th>Alcance</th></tr>
+  <tr><td><b>Local</b></td><td><code>DECLARE v_x INT DEFAULT 0;</code> (sin @)</td><td>Solo dentro de su BEGIN…END. Se declara al principio del bloque.</td></tr>
+  <tr><td><b>De sesión</b> (de usuario)</td><td><code>SET @x = 1;</code> (no se declara)</td><td>Toda la conexión, desde cualquier lado. Se usan para recibir OUT.</td></tr>
+  <tr><td><b>De sistema</b></td><td><code>@@autocommit</code>, <code>@@sql_mode</code>, <code>SELECT @@version;</code></td><td>Configuración del servidor o la sesión.</td></tr>
+ </table></div>
+<pre><code>DECLARE v_total  DECIMAL(12,2) DEFAULT 0;
+DECLARE v_nombre VARCHAR(80);                 -- sin DEFAULT arranca en NULL
+DECLARE v_min, v_max DECIMAL(10,2);           -- varias del mismo tipo
+
+SET v_total = 100;                                                  -- con SET
+SELECT nombre INTO v_nombre FROM clientes WHERE id = 1;             -- con SELECT ... INTO
+SELECT MIN(precio), MAX(precio) INTO v_min, v_max FROM productos;   -- varias a la vez</code></pre>
+ <div class="trap"><b>Trampas de SELECT … INTO</b><ul>
+  <li>Tiene que devolver <b>exactamente 1 fila</b>. Si devuelve varias: <b>error 1172</b> "Result consisted of more than one row" (filtrá por PK o usá <code>LIMIT 1</code>).</li>
+  <li>Si devuelve 0 filas: warning 1329 "No data", la variable <b>queda con el valor que tenía</b>, y si hay un handler NOT FOUND, se dispara.</li>
+  <li>Si una variable se llama igual que una columna, MySQL usa la variable y la consulta da cualquier cosa. Usá prefijos: <code>p_</code> parámetros, <code>v_</code> variables.</li>
+ </ul></div>
+
+ <h3>IF … ELSEIF … ELSE … END IF</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_nivel_cliente;
+DELIMITER //
+CREATE PROCEDURE sp_nivel_cliente(IN p_cliente INT, OUT p_nivel VARCHAR(10))
+BEGIN
+  DECLARE v_gastado DECIMAL(12,2) DEFAULT 0;
+
+  SELECT IFNULL(SUM(total), 0) INTO v_gastado
+  FROM pedidos
+  WHERE cliente_id = p_cliente AND estado <> 'cancelado';
+
+  IF v_gastado >= 100000 THEN
+    SET p_nivel = 'ORO';
+  ELSEIF v_gastado >= 30000 THEN
+    SET p_nivel = 'PLATA';
+  ELSE
+    SET p_nivel = 'BRONCE';
+  END IF;
+END //
+DELIMITER ;
+
+CALL sp_nivel_cliente(1, @nivel);  SELECT @nivel;   -- ORO
+CALL sp_nivel_cliente(4, @nivel);  SELECT @nivel;   -- BRONCE</code></pre>
+ <p>No confundas la <b>sentencia</b> <code>IF … END IF</code> (en SP) con la <b>función</b> <code>IF(cond, a, b)</code> (dentro de un SELECT).</p>
+
+ <h3>CASE … END CASE</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_descuento;
+DELIMITER //
+CREATE PROCEDURE sp_descuento(IN p_categoria VARCHAR(40), OUT p_pct INT)
+BEGIN
+  CASE p_categoria                         -- CASE simple: compara un valor
+    WHEN 'Electrónica' THEN SET p_pct = 10;
+    WHEN 'Hogar'       THEN SET p_pct = 15;
+    ELSE SET p_pct = 0;
+  END CASE;
+END //
+DELIMITER ;
+CALL sp_descuento('Hogar', @d);  SELECT @d;   -- 15
+
+-- CASE "buscado": cada WHEN es una condición
+-- CASE
+--   WHEN v_stock = 0 THEN SET v_estado = 'SIN STOCK';
+--   WHEN v_stock < 5 THEN SET v_estado = 'CRÍTICO';
+--   ELSE SET v_estado = 'OK';
+-- END CASE;</code></pre>
+ <div class="trap"><b>Trampa:</b> si ningún WHEN coincide y no hay ELSE, la sentencia CASE da <b>error 1339</b> "Case not found for CASE statement" (la expresión CASE de un SELECT devolvería NULL, la sentencia no).</div>
+
+ <h3>Bucles: WHILE, REPEAT, LOOP</h3>
+<pre><code>-- WHILE: evalúa ANTES (puede no ejecutarse nunca)
+WHILE v_i <= 10 DO
+  SET v_i = v_i + 1;
+END WHILE;
+
+-- REPEAT: evalúa DESPUÉS (se ejecuta al menos una vez). Sin ; después del UNTIL
+REPEAT
+  SET v_i = v_i + 1;
+UNTIL v_i > 10
+END REPEAT;
+
+-- LOOP: infinito hasta que hagas LEAVE. Necesita etiqueta
+bucle: LOOP
+  SET v_i = v_i + 1;
+  IF v_i > 10 THEN LEAVE bucle; END IF;         -- LEAVE = break
+  IF v_i % 2 = 0 THEN ITERATE bucle; END IF;    -- ITERATE = continue
+  -- acá solo llegan los impares
+END LOOP bucle;</code></pre>
+<pre><code>-- Ejemplo con WHILE: cargar datos de prueba
+DROP PROCEDURE IF EXISTS sp_cargar_productos_prueba;
+DELIMITER //
+CREATE PROCEDURE sp_cargar_productos_prueba(IN p_cantidad INT)
+BEGIN
+  DECLARE v_i INT DEFAULT 1;
+  WHILE v_i <= p_cantidad DO
+    INSERT INTO productos (nombre, categoria, precio, stock)
+    VALUES (CONCAT('Producto test ', v_i), 'Test', ROUND(RAND() * 50000, 2), FLOOR(RAND() * 100));
+    SET v_i = v_i + 1;
+  END WHILE;
+  SELECT CONCAT(p_cantidad, ' productos creados') AS resultado;
+END //
+DELIMITER ;
+CALL sp_cargar_productos_prueba(3);
+DELETE FROM productos WHERE categoria = 'Test';   -- limpiar
+
+-- Ejemplo con LOOP: factorial
+DROP PROCEDURE IF EXISTS sp_factorial;
+DELIMITER //
+CREATE PROCEDURE sp_factorial(IN p_n INT, OUT p_res BIGINT)
+BEGIN
+  DECLARE v_i INT DEFAULT 1;
+  SET p_res = 1;
+  calc: LOOP
+    IF v_i > p_n THEN LEAVE calc; END IF;
+    SET p_res = p_res * v_i;
+    SET v_i = v_i + 1;
+  END LOOP calc;
+END //
+DELIMITER ;
+CALL sp_factorial(5, @f);  SELECT @f;   -- 120</code></pre>
+
+ <h3>Salida temprana y bloques anidados</h3>
+ <p>En un procedure no hay <code>RETURN</code> (eso es de funciones). Para salir antes, ponele etiqueta al BEGIN y hacé <code>LEAVE</code>. Los BEGIN…END se pueden anidar, cada uno con sus propios DECLARE.</p>
+<pre><code>DROP PROCEDURE IF EXISTS sp_ver_cliente;
+DELIMITER //
+CREATE PROCEDURE sp_ver_cliente(IN p_id INT)
+proc: BEGIN
+  IF p_id IS NULL OR p_id <= 0 THEN
+    SELECT 'Id inválido' AS mensaje;
+    LEAVE proc;                         -- sale del procedure
+  END IF;
+  SELECT * FROM clientes WHERE id = p_id;
+END //
+DELIMITER ;
+CALL sp_ver_cliente(0);</code></pre>
+
+ <h3>Administrar los SP</h3>
+<pre><code>SHOW PROCEDURE STATUS WHERE Db = 'tienda';
+SHOW CREATE PROCEDURE sp_nivel_cliente;
+SELECT ROUTINE_NAME, ROUTINE_TYPE
+FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA = 'tienda';
+DROP PROCEDURE IF EXISTS sp_factorial;
+ALTER PROCEDURE sp_nivel_cliente COMMENT 'Clasifica por gasto';   -- solo características</code></pre>
+ <div class="trap"><b>Trampa:</b> MySQL <b>no tiene</b> <code>CREATE OR REPLACE PROCEDURE</code> (eso es MariaDB). <code>ALTER PROCEDURE</code> no cambia el cuerpo. Para modificarlo: <code>DROP PROCEDURE IF EXISTS</code> + <code>CREATE</code> de nuevo.</div>
+
+ <div class="quiz" data-q="b4"></div>
+
+ <h3>Ejercicios</h3>
+ <div class="ex"><p><b>1.</b> <code>sp_actualizar_precio(p_id, p_pct)</code>: sube el precio del producto un p_pct por ciento y muestra cómo quedó.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_actualizar_precio;
+DELIMITER //
+CREATE PROCEDURE sp_actualizar_precio(IN p_id INT, IN p_pct DECIMAL(5,2))
+BEGIN
+  UPDATE productos
+  SET precio = ROUND(precio * (1 + p_pct / 100), 2)
+  WHERE id = p_id;
+
+  SELECT id, nombre, precio FROM productos WHERE id = p_id;
+END //
+DELIMITER ;
+CALL sp_actualizar_precio(2, 10);</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>2.</b> <code>sp_estado_stock(p_id, OUT p_estado)</code>: 'NO EXISTE' si no está el producto, 'SIN STOCK' si es 0, 'CRÍTICO' si es menor a 5, 'OK' si no.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_estado_stock;
+DELIMITER //
+CREATE PROCEDURE sp_estado_stock(IN p_id INT, OUT p_estado VARCHAR(20))
+BEGIN
+  DECLARE v_stock INT DEFAULT NULL;          -- si no hay fila, queda NULL
+
+  SELECT stock INTO v_stock FROM productos WHERE id = p_id;
+
+  IF v_stock IS NULL THEN
+    SET p_estado = 'NO EXISTE';
+  ELSEIF v_stock = 0 THEN
+    SET p_estado = 'SIN STOCK';
+  ELSEIF v_stock < 5 THEN
+    SET p_estado = 'CRÍTICO';
+  ELSE
+    SET p_estado = 'OK';
+  END IF;
+END //
+DELIMITER ;
+CALL sp_estado_stock(5, @e);   SELECT @e;   -- SIN STOCK
+CALL sp_estado_stock(99, @e);  SELECT @e;   -- NO EXISTE</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>3.</b> <code>sp_suma_pares(p_n, OUT p_suma)</code>: suma los pares de 1 a n con WHILE.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_suma_pares;
+DELIMITER //
+CREATE PROCEDURE sp_suma_pares(IN p_n INT, OUT p_suma INT)
+BEGIN
+  DECLARE v_i INT DEFAULT 1;
+  SET p_suma = 0;                 -- OUT arranca en NULL: inicializalo
+  WHILE v_i <= p_n DO
+    IF v_i % 2 = 0 THEN
+      SET p_suma = p_suma + v_i;
+    END IF;
+    SET v_i = v_i + 1;
+  END WHILE;
+END //
+DELIMITER ;
+CALL sp_suma_pares(10, @s);  SELECT @s;   -- 30</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>4.</b> <code>sp_resumen_cliente(p_id)</code>: devuelve <b>dos</b> resultados, los datos del cliente y la lista de sus pedidos. (Un SP puede devolver varios result sets.)</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_resumen_cliente;
+DELIMITER //
+CREATE PROCEDURE sp_resumen_cliente(IN p_id INT)
+BEGIN
+  SELECT nombre, email, ciudad, saldo FROM clientes WHERE id = p_id;
+  SELECT id, fecha, estado, total FROM pedidos WHERE cliente_id = p_id ORDER BY fecha;
+END //
+DELIMITER ;
+CALL sp_resumen_cliente(5);</code></pre>
+ </div></details></div>
+</section>
+
+<!-- ===================== PAUSA ===================== -->
+<section class="blk pausa" id="pausa">
+ <div class="bh"><div><span class="when">Cuando quieras · 10 min</span><h2>Descanso</h2></div></div>
+ <p>Levantate, tomá agua, mirá lejos de la pantalla. Antes de volver, repasá de memoria (sin mirar): la estructura <code>DELIMITER // CREATE PROCEDURE … BEGIN … END // DELIMITER ;</code>, los tres modos de parámetro y los tres bucles. Después seguís con lo más importante: cursores, handlers y transacciones.</p>
+</section>
+
+<!-- ===================== B5 ===================== -->
+<section class="blk" id="b5" data-sp>
+ <div class="bh"><div><span class="when">~25 min · foco principal</span><h2>5 · Stored Procedures II</h2></div><label class="chk"><input type="checkbox" data-done="b5"> Terminé</label></div>
+
+ <h3>Orden obligatorio de los DECLARE</h3>
+ <ol>
+  <li><b>Variables y condiciones</b> (<code>DECLARE v_x …</code>, <code>DECLARE e_dup CONDITION FOR 1062</code>)</li>
+  <li><b>Cursores</b></li>
+  <li><b>Handlers</b></li>
+ </ol>
+ <p>Recién después van las sentencias. Si mezclás el orden: error 1337 o 1338 ("declaration after cursor or handler declaration").</p>
+
+ <h3>Cursores</h3>
+ <p>Un cursor recorre fila por fila el resultado de un SELECT. En MySQL son <b>de solo lectura</b> y <b>solo hacia adelante</b> (no scrollables). Pasos: <b>DECLARE → OPEN → FETCH (en un bucle) → CLOSE</b>. Cuando no quedan filas, el FETCH dispara la condición <b>NOT FOUND</b> (SQLSTATE '02000'): por eso se declara un handler que prende una bandera.</p>
+<pre><code>DROP PROCEDURE IF EXISTS sp_recalcular_totales;
+DELIMITER //
+CREATE PROCEDURE sp_recalcular_totales()
+BEGIN
+  DECLARE v_fin    BOOLEAN DEFAULT FALSE;          -- 1) variables
+  DECLARE v_pedido INT;
+  DECLARE v_total  DECIMAL(12,2);
+
+  DECLARE cur_pedidos CURSOR FOR                    -- 2) cursor
+    SELECT id FROM pedidos;
+
+  DECLARE CONTINUE HANDLER FOR NOT FOUND            -- 3) handler
+    SET v_fin = TRUE;
+
+  OPEN cur_pedidos;
+  recorrer: LOOP
+    FETCH cur_pedidos INTO v_pedido;
+    IF v_fin THEN
+      LEAVE recorrer;                               -- se acabaron las filas
+    END IF;
+
+    SELECT IFNULL(SUM(cantidad * precio_unit), 0) INTO v_total
+    FROM detalle_pedido WHERE pedido_id = v_pedido;
+
+    UPDATE pedidos SET total = v_total WHERE id = v_pedido;
+  END LOOP recorrer;
+  CLOSE cur_pedidos;
+
+  SELECT id, total FROM pedidos;
+END //
+DELIMITER ;
+CALL sp_recalcular_totales();</code></pre>
+ <div class="trap"><b>Trampas de cursores</b><ul>
+  <li>El <b>FETCH va antes</b> del <code>IF v_fin</code>. Si chequeás antes, procesás la última fila dos veces.</li>
+  <li>El handler NOT FOUND <b>también se dispara</b> si un <code>SELECT … INTO</code> dentro del bucle no encuentra filas: la bandera se prende y el bucle corta antes de tiempo. Solución: que ese SELECT siempre devuelva una fila (con SUM/COUNT, como arriba), volver a poner la bandera en FALSE, o meterlo en un BEGIN…END con su propio handler.</li>
+  <li>Sin handler NOT FOUND, al acabarse las filas el SP termina con <b>error 1329</b> "No data".</li>
+ </ul></div>
+ <p>Lo de arriba también sale con una sola sentencia basada en conjuntos, que es mucho más rápida. Usá cursores solo cuando necesitás lógica fila por fila (llamar otro SP por fila, decisiones complejas, armar textos).</p>
+<pre><code>UPDATE pedidos p
+SET total = (SELECT IFNULL(SUM(d.cantidad * d.precio_unit), 0)
+             FROM detalle_pedido d WHERE d.pedido_id = p.id);</code></pre>
+ <p>El mismo patrón con WHILE (FETCH antes del bucle y otro al final):</p>
+<pre><code>DROP PROCEDURE IF EXISTS sp_lista_emails;
+DELIMITER //
+CREATE PROCEDURE sp_lista_emails(IN p_ciudad VARCHAR(60), OUT p_lista TEXT)
+BEGIN
+  DECLARE v_fin   INT DEFAULT 0;
+  DECLARE v_email VARCHAR(120);
+  DECLARE cur CURSOR FOR
+    SELECT email FROM clientes WHERE ciudad = p_ciudad AND email IS NOT NULL;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_fin = 1;
+
+  SET p_lista = '';
+  OPEN cur;
+  FETCH cur INTO v_email;
+  WHILE v_fin = 0 DO
+    SET p_lista = CONCAT(p_lista, IF(p_lista = '', '', '; '), v_email);
+    FETCH cur INTO v_email;
+  END WHILE;
+  CLOSE cur;
+END //
+DELIMITER ;
+CALL sp_lista_emails('Rosario', @l);  SELECT @l;   -- martina@mail.com; valen@mail.com
+-- en la vida real: SELECT GROUP_CONCAT(email SEPARATOR '; ') ...</code></pre>
+
+ <h3>Handlers (manejo de errores)</h3>
+ <p>Sintaxis: <code>DECLARE {CONTINUE | EXIT} HANDLER FOR condición sentencia;</code></p>
+ <ul>
+  <li><b>CONTINUE</b>: ejecuta la sentencia del handler y sigue con la línea siguiente.</li>
+  <li><b>EXIT</b>: ejecuta el handler y sale del BEGIN…END donde se declaró (si es el principal, termina el SP).</li>
+ </ul>
+ <div class="scroll"><table>
+  <tr><th>Condición</th><th>Qué captura</th></tr>
+  <tr><td>Código MySQL: <code>1062</code></td><td>Clave duplicada. Otros: <code>1452</code> (FK: no existe el padre), <code>1451</code> (FK: tiene hijos), <code>1048</code> (columna NOT NULL), <code>1146</code> (tabla no existe)</td></tr>
+  <tr><td><code>SQLSTATE '23000'</code></td><td>Violación de integridad (duplicados, FK…). <code>'45000'</code> = error definido por el usuario</td></tr>
+  <tr><td><code>SQLWARNING</code></td><td>Todos los SQLSTATE que empiezan con <code>'01'</code></td></tr>
+  <tr><td><code>NOT FOUND</code></td><td>Los que empiezan con <code>'02'</code>: fin del cursor, SELECT INTO sin filas</td></tr>
+  <tr><td><code>SQLEXCEPTION</code></td><td>Todo el resto: errores de verdad</td></tr>
+  <tr><td>Condición con nombre</td><td><code>DECLARE e_dup CONDITION FOR 1062;</code> y después <code>HANDLER FOR e_dup</code></td></tr>
+ </table></div>
+ <p>Si aplican varios handlers, gana el más específico (código MySQL antes que SQLSTATE, y este antes que SQLEXCEPTION).</p>
+<pre><code>DROP PROCEDURE IF EXISTS sp_alta_cliente;
+DELIMITER //
+CREATE PROCEDURE sp_alta_cliente(
+  IN  p_nombre VARCHAR(80), IN p_email VARCHAR(120), IN p_ciudad VARCHAR(60),
+  OUT p_mensaje VARCHAR(150))
+BEGIN
+  DECLARE e_duplicado CONDITION FOR 1062;
+  DECLARE EXIT HANDLER FOR e_duplicado
+    SET p_mensaje = CONCAT('Error: ya existe un cliente con el email ', p_email);
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    SET p_mensaje = 'Error inesperado al dar de alta';
+
+  INSERT INTO clientes (nombre, email, ciudad) VALUES (p_nombre, p_email, p_ciudad);
+  SET p_mensaje = CONCAT('Cliente creado con id ', LAST_INSERT_ID());
+END //
+DELIMITER ;
+CALL sp_alta_cliente('Sofía Ruiz', 'sofia@mail.com', 'Salta', @msg);  SELECT @msg;
+CALL sp_alta_cliente('Otra Sofía', 'sofia@mail.com', 'Salta', @msg);  SELECT @msg;  -- duplicado</code></pre>
+ <p>Para saber qué error pasó adentro de un handler, usá <b>GET DIAGNOSTICS</b>:</p>
+<pre><code>DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+  GET DIAGNOSTICS CONDITION 1
+    @err_num = MYSQL_ERRNO, @err_msg = MESSAGE_TEXT, @err_state = RETURNED_SQLSTATE;
+  SELECT @err_num AS codigo, @err_msg AS mensaje;
+END;</code></pre>
+
+ <h3>SIGNAL y RESIGNAL (lanzar errores)</h3>
+<pre><code>-- SIGNAL = "throw": cortás la ejecución con tu propio error
+IF p_cantidad <= 0 THEN
+  SIGNAL SQLSTATE '45000'
+    SET MESSAGE_TEXT = 'La cantidad debe ser mayor a cero',
+        MYSQL_ERRNO  = 5001;
+END IF;
+
+-- MESSAGE_TEXT acepta un literal o una variable, NO una expresión:
+-- SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = CONCAT('x', v);   -- ERROR de sintaxis
+SET v_msg = CONCAT('Stock insuficiente. Disponible: ', v_stock);
+SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_msg;               -- bien</code></pre>
+ <p><b>RESIGNAL</b> va dentro de un handler: vuelve a lanzar el error que se capturó (podés cambiarle el mensaje). El patrón típico es <code>ROLLBACK; RESIGNAL;</code>: deshacés y avisás a quien llamó.</p>
+
+ <h3>Transacciones dentro de un SP: el patrón de examen</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_crear_pedido;
+DELIMITER //
+CREATE PROCEDURE sp_crear_pedido(
+  IN  p_cliente  INT,
+  IN  p_producto INT,
+  IN  p_cantidad INT,
+  OUT p_pedido   INT)
+BEGIN
+  DECLARE v_stock  INT DEFAULT NULL;
+  DECLARE v_precio DECIMAL(10,2);
+  DECLARE v_msg    VARCHAR(200);
+
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;        -- deshago todo lo hecho
+    RESIGNAL;        -- y le paso el error a quien llamó
+  END;
+
+  IF p_cantidad IS NULL OR p_cantidad <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cantidad inválida';
+  END IF;
+
+  START TRANSACTION;
+
+    -- FOR UPDATE bloquea la fila hasta el COMMIT: nadie más vende ese stock a la vez
+    SELECT stock, precio INTO v_stock, v_precio
+    FROM productos WHERE id = p_producto
+    FOR UPDATE;
+
+    IF v_stock IS NULL THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El producto no existe';
+    END IF;
+
+    IF v_stock < p_cantidad THEN
+      SET v_msg = CONCAT('Stock insuficiente. Disponible: ', v_stock);
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = v_msg;
+    END IF;
+
+    INSERT INTO pedidos (cliente_id, fecha, estado, total)
+    VALUES (p_cliente, CURDATE(), 'pendiente', p_cantidad * v_precio);
+    SET p_pedido = LAST_INSERT_ID();
+
+    INSERT INTO detalle_pedido (pedido_id, producto_id, cantidad, precio_unit)
+    VALUES (p_pedido, p_producto, p_cantidad, v_precio);
+
+    UPDATE productos SET stock = stock - p_cantidad WHERE id = p_producto;
+
+  COMMIT;
+END //
+DELIMITER ;
+
+CALL sp_crear_pedido(1, 2, 1, @nuevo);  SELECT @nuevo;   -- ok: id del pedido
+CALL sp_crear_pedido(1, 2, 9999, @nuevo);                -- Error: Stock insuficiente
+CALL sp_crear_pedido(999, 2, 1, @nuevo);                 -- Error 1452 (FK) → ROLLBACK</code></pre>
+ <ul>
+  <li>El handler <b>EXIT + ROLLBACK + RESIGNAL</b> garantiza "todo o nada" sin esconder el error. Se declara arriba, antes del <code>START TRANSACTION</code>.</li>
+  <li>Si el handler hiciera ROLLBACK sin RESIGNAL, el SP terminaría "bien" y quien llamó no se enteraría.</li>
+  <li>MySQL no tiene transacciones anidadas: un <code>START TRANSACTION</code> con otra abierta hace <b>COMMIT implícito</b> de la anterior. Para "sub-transacciones" usá <code>SAVEPOINT</code>.</li>
+  <li><code>ROW_COUNT()</code>: filas afectadas por el último INSERT/UPDATE/DELETE. <code>LAST_INSERT_ID()</code>: último AUTO_INCREMENT de tu conexión.</li>
+ </ul>
+
+ <h3>Un SP que llama a otro</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_premiar_cliente;
+DELIMITER //
+CREATE PROCEDURE sp_premiar_cliente(IN p_id INT)
+BEGIN
+  DECLARE v_nivel VARCHAR(10);
+  CALL sp_nivel_cliente(p_id, v_nivel);     -- el OUT cae en una variable local
+  IF v_nivel = 'ORO' THEN
+    UPDATE clientes SET saldo = saldo + 5000 WHERE id = p_id;
+  END IF;
+  SELECT p_id AS cliente, v_nivel AS nivel;
+END //
+DELIMITER ;
+CALL sp_premiar_cliente(1);</code></pre>
+ <p>Recursión: un SP puede llamarse a sí mismo si subís <code>SET max_sp_recursion_depth = 10;</code> (por defecto es 0 = deshabilitada, máximo 255). Las funciones no pueden ser recursivas.</p>
+
+ <h3>SQL dinámico: PREPARE / EXECUTE</h3>
+ <p>Si el nombre de una tabla o columna llega por parámetro, no lo podés poner directo: <code>SELECT * FROM p_tabla</code> busca una tabla llamada "p_tabla". Armás el texto y lo ejecutás.</p>
+<pre><code>DROP PROCEDURE IF EXISTS sp_contar_filas;
+DELIMITER //
+CREATE PROCEDURE sp_contar_filas(IN p_tabla VARCHAR(64))
+BEGIN
+  SET @sql = CONCAT('SELECT COUNT(*) AS filas FROM `', REPLACE(p_tabla, '`', ''), '`');
+  PREPARE stmt FROM @sql;
+  EXECUTE stmt;
+  DEALLOCATE PREPARE stmt;
+END //
+DELIMITER ;
+CALL sp_contar_filas('productos');
+
+-- valores por ? (nunca concatenados: evita inyección SQL) + lista blanca para columnas
+DROP PROCEDURE IF EXISTS sp_productos_entre;
+DELIMITER //
+CREATE PROCEDURE sp_productos_entre(IN p_min DECIMAL(10,2), IN p_max DECIMAL(10,2), IN p_orden VARCHAR(10))
+BEGIN
+  DECLARE v_col VARCHAR(10);
+  SET v_col = IF(p_orden IN ('precio', 'nombre', 'stock'), p_orden, 'id');
+  SET @sql = CONCAT('SELECT nombre, precio, stock FROM productos ',
+                    'WHERE precio BETWEEN ? AND ? ORDER BY ', v_col);
+  SET @min = p_min, @max = p_max;
+  PREPARE stmt FROM @sql;
+  EXECUTE stmt USING @min, @max;
+  DEALLOCATE PREPARE stmt;
+END //
+DELIMITER ;
+CALL sp_productos_entre(10000, 80000, 'precio');</code></pre>
+ <div class="trap"><b>Reglas del SQL dinámico</b><ul>
+  <li><code>PREPARE … FROM</code> acepta un literal o una variable de sesión (<code>@sql</code>), no una local. <code>EXECUTE … USING</code> usa variables <code>@</code>.</li>
+  <li>Los <code>?</code> son para <b>valores</b>; nombres de tablas o columnas no van con <code>?</code>: validalos con lista blanca.</li>
+  <li><b>No se puede</b> usar en funciones ni en triggers.</li>
+ </ul></div>
+
+ <h3>Seguridad y características</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_seguro;
+DELIMITER //
+CREATE DEFINER = CURRENT_USER PROCEDURE sp_seguro()
+  COMMENT 'Ejemplo de características'
+  READS SQL DATA
+  SQL SECURITY DEFINER
+BEGIN
+  SELECT COUNT(*) AS clientes FROM clientes;
+END //
+DELIMITER ;
+
+GRANT EXECUTE ON PROCEDURE tienda.sp_crear_pedido TO 'vendedor'@'localhost';</code></pre>
+ <ul>
+  <li><b>SQL SECURITY DEFINER</b> (default): corre con los permisos del que lo creó. Así le das <code>EXECUTE</code> a un usuario sin darle acceso a las tablas.</li>
+  <li><b>SQL SECURITY INVOKER</b>: corre con los permisos del que lo llama.</li>
+  <li>Permisos: <code>CREATE ROUTINE</code> (crear), <code>ALTER ROUTINE</code> (modificar o borrar), <code>EXECUTE</code> (llamar).</li>
+  <li>Características: <code>COMMENT</code>, <code>LANGUAGE SQL</code>, <code>[NOT] DETERMINISTIC</code>, <code>CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA</code>, <code>SQL SECURITY</code>.</li>
+ </ul>
+
+ <div class="quiz" data-q="b5"></div>
+
+ <h3>Ejercicios</h3>
+ <div class="ex"><p><b>1.</b> <code>sp_transferir_saldo(p_origen, p_destino, p_monto)</code> con transacción: valida monto positivo, que sean distintos, que existan y que haya saldo. Si algo falla: ROLLBACK y error.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_transferir_saldo;
+DELIMITER //
+CREATE PROCEDURE sp_transferir_saldo(IN p_origen INT, IN p_destino INT, IN p_monto DECIMAL(10,2))
+BEGIN
+  DECLARE v_saldo  DECIMAL(10,2) DEFAULT NULL;
+  DECLARE v_existe INT DEFAULT 0;
+
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    RESIGNAL;
+  END;
+
+  IF p_monto IS NULL OR p_monto <= 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El monto debe ser positivo';
+  END IF;
+  IF p_origen = p_destino THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Origen y destino son iguales';
+  END IF;
+
+  START TRANSACTION;
+    SELECT saldo INTO v_saldo FROM clientes WHERE id = p_origen FOR UPDATE;
+    SELECT COUNT(*) INTO v_existe FROM clientes WHERE id = p_destino;
+
+    IF v_saldo IS NULL OR v_existe = 0 THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cliente inexistente';
+    END IF;
+    IF v_saldo < p_monto THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Saldo insuficiente';
+    END IF;
+
+    UPDATE clientes SET saldo = saldo - p_monto WHERE id = p_origen;
+    UPDATE clientes SET saldo = saldo + p_monto WHERE id = p_destino;
+  COMMIT;
+
+  SELECT id, nombre, saldo FROM clientes WHERE id IN (p_origen, p_destino);
+END //
+DELIMITER ;
+CALL sp_transferir_saldo(1, 2, 5000);
+CALL sp_transferir_saldo(6, 2, 999999);   -- Error: Saldo insuficiente</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>2.</b> Con cursor: <code>sp_aumentar_categoria(p_categoria, p_pct, OUT p_cambiados)</code> recorre los productos de la categoría, les sube el precio, registra cada cambio en <code>log_auditoria</code> y devuelve cuántos cambió.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_aumentar_categoria;
+DELIMITER //
+CREATE PROCEDURE sp_aumentar_categoria(IN p_categoria VARCHAR(40), IN p_pct DECIMAL(5,2), OUT p_cambiados INT)
+BEGIN
+  DECLARE v_fin    INT DEFAULT 0;
+  DECLARE v_id     INT;
+  DECLARE v_nombre VARCHAR(80);
+  DECLARE v_precio DECIMAL(10,2);
+  DECLARE v_nuevo  DECIMAL(10,2);
+  DECLARE cur CURSOR FOR
+    SELECT id, nombre, precio FROM productos WHERE categoria = p_categoria;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_fin = 1;
+
+  SET p_cambiados = 0;
+  OPEN cur;
+  bucle: LOOP
+    FETCH cur INTO v_id, v_nombre, v_precio;
+    IF v_fin = 1 THEN LEAVE bucle; END IF;
+
+    SET v_nuevo = ROUND(v_precio * (1 + p_pct / 100), 2);
+    UPDATE productos SET precio = v_nuevo WHERE id = v_id;
+    INSERT INTO log_auditoria (tabla, accion, detalle)
+    VALUES ('productos', 'aumento', CONCAT(v_nombre, ': ', v_precio, ' -> ', v_nuevo));
+    SET p_cambiados = p_cambiados + 1;
+  END LOOP bucle;
+  CLOSE cur;
+END //
+DELIMITER ;
+CALL sp_aumentar_categoria('Hogar', 5, @n);  SELECT @n;   -- 3
+SELECT * FROM log_auditoria ORDER BY id DESC;</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>3.</b> <code>sp_reponer_stock(p_umbral, p_cantidad, OUT p_afectados)</code>: suma p_cantidad al stock de los productos por debajo del umbral y devuelve cuántas filas cambió.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_reponer_stock;
+DELIMITER //
+CREATE PROCEDURE sp_reponer_stock(IN p_umbral INT, IN p_cantidad INT, OUT p_afectados INT)
+BEGIN
+  UPDATE productos SET stock = stock + p_cantidad WHERE stock < p_umbral;
+  SET p_afectados = ROW_COUNT();     -- justo después del UPDATE
+END //
+DELIMITER ;
+CALL sp_reponer_stock(5, 20, @a);  SELECT @a;</code></pre>
+ </div></details></div>
+</section>
+
+<!-- ===================== B6 ===================== -->
+<section class="blk" id="b6">
+ <div class="bh"><div><span class="when">~12 min</span><h2>6 · Funciones, triggers y eventos</h2></div><label class="chk"><input type="checkbox" data-done="b6"> Terminé</label></div>
+
+ <h3>Funciones almacenadas</h3>
+<pre><code>DROP FUNCTION IF EXISTS fn_precio_con_iva;
+DELIMITER //
+CREATE FUNCTION fn_precio_con_iva(p_precio DECIMAL(10,2))
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+  RETURN ROUND(p_precio * 1.21, 2);
+END //
+DELIMITER ;
+SELECT nombre, precio, fn_precio_con_iva(precio) AS con_iva FROM productos;
+
+DROP FUNCTION IF EXISTS fn_total_gastado;
+DELIMITER //
+CREATE FUNCTION fn_total_gastado(p_cliente INT)
+RETURNS DECIMAL(12,2)
+READS SQL DATA
+BEGIN
+  DECLARE v_total DECIMAL(12,2);
+  SELECT IFNULL(SUM(total), 0) INTO v_total
+  FROM pedidos WHERE cliente_id = p_cliente AND estado <> 'cancelado';
+  RETURN v_total;
+END //
+DELIMITER ;
+SELECT nombre, fn_total_gastado(id) AS gastado FROM clientes ORDER BY gastado DESC;</code></pre>
+ <div class="trap"><b>Error 1418:</b> con el log binario activo (el default en MySQL 8), al crear una función tenés que declarar <code>DETERMINISTIC</code>, <code>NO SQL</code> o <code>READS SQL DATA</code>. Si no, falla con "This function has none of DETERMINISTIC, NO SQL, or READS SQL DATA…". (Alternativa de admin: <code>SET GLOBAL log_bin_trust_function_creators = 1;</code>)</div>
+ <ul>
+  <li><b>DETERMINISTIC</b>: mismos parámetros → siempre el mismo resultado (no lee tablas, no usa NOW() ni RAND()).</li>
+  <li><b>READS SQL DATA</b>: lee tablas sin modificarlas. <b>MODIFIES SQL DATA</b>: escribe. <b>NO SQL</b>: no tiene SQL. <b>CONTAINS SQL</b> (default): tiene SQL pero no lee ni escribe datos.</li>
+ </ul>
+
+ <h3>Procedure vs función (pregunta fija de examen)</h3>
+ <div class="scroll"><table>
+  <tr><th></th><th>Procedure</th><th>Función</th></tr>
+  <tr><td>Se ejecuta con</td><td><code>CALL sp()</code></td><td>Dentro de una expresión: <code>SELECT fn(x)</code>, <code>WHERE fn(x) > 0</code></td></tr>
+  <tr><td>Parámetros</td><td>IN, OUT, INOUT</td><td>Solo IN (sin escribir la palabra)</td></tr>
+  <tr><td>Devuelve</td><td>0, 1 o varios result sets + valores OUT</td><td>Exactamente un valor con <code>RETURN</code></td></tr>
+  <tr><td><code>RETURNS</code> tipo</td><td>No</td><td>Obligatorio</td></tr>
+  <tr><td>COMMIT / ROLLBACK</td><td>Sí</td><td>No</td></tr>
+  <tr><td>SQL dinámico</td><td>Sí</td><td>No</td></tr>
+  <tr><td>SELECT que devuelve filas</td><td>Sí</td><td>No (solo <code>SELECT … INTO</code>)</td></tr>
+  <tr><td>Recursión</td><td>Sí, con <code>max_sp_recursion_depth</code></td><td>No</td></tr>
+ </table></div>
+
+ <h3>Triggers</h3>
+ <p>Un trigger se ejecuta solo ante un <b>INSERT, UPDATE o DELETE</b> sobre una tabla, <b>BEFORE</b> o <b>AFTER</b>, una vez por cada fila (<code>FOR EACH ROW</code>).</p>
+ <div class="scroll"><table>
+  <tr><th>Evento</th><th>OLD</th><th>NEW</th></tr>
+  <tr><td>INSERT</td><td>No existe</td><td>La fila nueva</td></tr>
+  <tr><td>UPDATE</td><td>Valores viejos</td><td>Valores nuevos</td></tr>
+  <tr><td>DELETE</td><td>La fila borrada</td><td>No existe</td></tr>
+ </table></div>
+ <p><code>NEW.col</code> se puede modificar (<code>SET NEW.col = …</code>) <b>solo en un trigger BEFORE</b>. OLD es de solo lectura.</p>
+<pre><code>-- BEFORE INSERT: normalizar datos
+DROP TRIGGER IF EXISTS trg_clientes_bi;
+DELIMITER //
+CREATE TRIGGER trg_clientes_bi
+BEFORE INSERT ON clientes
+FOR EACH ROW
+BEGIN
+  SET NEW.email  = LOWER(TRIM(NEW.email));
+  SET NEW.nombre = TRIM(NEW.nombre);
+END //
+DELIMITER ;
+
+-- BEFORE UPDATE: validar (SIGNAL cancela la operación)
+DROP TRIGGER IF EXISTS trg_productos_bu;
+DELIMITER //
+CREATE TRIGGER trg_productos_bu
+BEFORE UPDATE ON productos
+FOR EACH ROW
+BEGIN
+  IF NEW.stock < 0 THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El stock no puede quedar negativo';
+  END IF;
+END //
+DELIMITER ;
+
+-- AFTER UPDATE: auditoría
+DROP TRIGGER IF EXISTS trg_productos_au;
+DELIMITER //
+CREATE TRIGGER trg_productos_au
+AFTER UPDATE ON productos
+FOR EACH ROW
+BEGIN
+  IF OLD.precio <> NEW.precio THEN
+    INSERT INTO log_auditoria (tabla, accion, detalle)
+    VALUES ('productos', 'cambio_precio', CONCAT('id ', NEW.id, ': ', OLD.precio, ' -> ', NEW.precio));
+  END IF;
+END //
+DELIMITER ;
+
+-- AFTER DELETE: guardar lo borrado
+DROP TRIGGER IF EXISTS trg_clientes_ad;
+DELIMITER //
+CREATE TRIGGER trg_clientes_ad
+AFTER DELETE ON clientes
+FOR EACH ROW
+BEGIN
+  INSERT INTO log_auditoria (tabla, accion, detalle)
+  VALUES ('clientes', 'baja', CONCAT(OLD.id, ' - ', OLD.nombre));
+END //
+DELIMITER ;
+
+UPDATE productos SET stock = -1 WHERE id = 1;   -- Error: El stock no puede quedar negativo
+SHOW TRIGGERS FROM tienda;</code></pre>
+ <div class="trap"><b>Trampas de triggers</b><ul>
+  <li>No puede modificar con UPDATE la misma tabla sobre la que está definido (<b>error 1442</b>). Para cambiar la fila actual: BEFORE + <code>SET NEW.col</code>.</li>
+  <li>No puede hacer COMMIT/ROLLBACK, ni SQL dinámico, ni devolver un SELECT al cliente.</li>
+  <li>Si un trigger falla o hace SIGNAL, se cancela la sentencia entera (en InnoDB se deshace todo).</li>
+  <li>Las acciones en cascada de las FK (<code>ON DELETE CASCADE</code>) <b>no disparan triggers</b>.</li>
+  <li>Se dispara por fila: un UPDATE de 100 filas lo ejecuta 100 veces.</li>
+  <li>No hay <code>ALTER TRIGGER</code>: DROP y CREATE. Para ordenar varios del mismo evento y momento: <code>FOLLOWS</code> / <code>PRECEDES</code>.</li>
+ </ul></div>
+
+ <h3>Eventos (tareas programadas)</h3>
+<pre><code>SET GLOBAL event_scheduler = ON;      -- requiere privilegios de admin
+
+DROP EVENT IF EXISTS ev_cancelar_pendientes;
+CREATE EVENT ev_cancelar_pendientes
+ON SCHEDULE EVERY 1 DAY
+STARTS CURRENT_TIMESTAMP + INTERVAL 1 HOUR
+DO
+  UPDATE pedidos SET estado = 'cancelado'
+  WHERE estado = 'pendiente' AND fecha < CURDATE() - INTERVAL 30 DAY;
+
+-- una sola vez:  ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 10 MINUTE
+-- lo más común:  DO CALL sp_mantenimiento();
+SHOW EVENTS;
+ALTER EVENT ev_cancelar_pendientes DISABLE;</code></pre>
+
+ <h3>Usuarios y permisos (DCL)</h3>
+<pre><code>CREATE USER 'vendedor'@'localhost' IDENTIFIED BY 'Clave#2026';
+GRANT SELECT ON tienda.productos TO 'vendedor'@'localhost';
+GRANT EXECUTE ON PROCEDURE tienda.sp_crear_pedido TO 'vendedor'@'localhost';
+SHOW GRANTS FOR 'vendedor'@'localhost';
+REVOKE SELECT ON tienda.productos FROM 'vendedor'@'localhost';
+
+CREATE ROLE 'lectura';
+GRANT SELECT ON tienda.* TO 'lectura';
+GRANT 'lectura' TO 'vendedor'@'localhost';
+SET DEFAULT ROLE 'lectura' TO 'vendedor'@'localhost';
+-- DROP USER 'vendedor'@'localhost';</code></pre>
+ <p><code>'%'</code> como host = desde cualquier lado. <code>WITH GRANT OPTION</code> deja que el usuario otorgue sus permisos. En MySQL 8, <code>GRANT</code> ya no crea usuarios: primero <code>CREATE USER</code>.</p>
+
+ <div class="quiz" data-q="b6"></div>
+
+ <div class="ex"><p><b>1.</b> Función <code>fn_rango_precio(p_precio)</code> que devuelva 'barato' (menos de 20 000), 'medio' (menos de 100 000) o 'caro'.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP FUNCTION IF EXISTS fn_rango_precio;
+DELIMITER //
+CREATE FUNCTION fn_rango_precio(p_precio DECIMAL(10,2))
+RETURNS VARCHAR(10)
+DETERMINISTIC
+BEGIN
+  RETURN CASE
+    WHEN p_precio < 20000  THEN 'barato'
+    WHEN p_precio < 100000 THEN 'medio'
+    ELSE 'caro'
+  END;
+END //
+DELIMITER ;
+SELECT nombre, precio, fn_rango_precio(precio) AS rango FROM productos;</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>2.</b> Trigger que, al insertar en <code>detalle_pedido</code>, descuente el stock del producto. ¿Qué problema tendría junto con <code>sp_crear_pedido</code>?</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP TRIGGER IF EXISTS trg_detalle_ai;
+DELIMITER //
+CREATE TRIGGER trg_detalle_ai
+AFTER INSERT ON detalle_pedido
+FOR EACH ROW
+BEGIN
+  UPDATE productos SET stock = stock - NEW.cantidad
+  WHERE id = NEW.producto_id;
+END //
+DELIMITER ;
+-- Problema: sp_crear_pedido ya descuenta el stock, así que se descontaría DOS veces.
+-- La lógica tiene que vivir en un solo lugar: o la sacás del SP o borrás el trigger.
+DROP TRIGGER trg_detalle_ai;</code></pre>
+ </div></details></div>
+</section>
+
+<!-- ===================== B7 ===================== -->
+<section class="blk" id="b7" data-sp>
+ <div class="bh"><div><span class="when">~13 min</span><h2>7 · Simulacro final</h2></div><label class="chk"><input type="checkbox" data-done="b7"> Terminé</label></div>
+
+ <h3>Plantilla de SP con todo, en el orden correcto</h3>
+<pre><code>DROP PROCEDURE IF EXISTS sp_plantilla;
+DELIMITER //
+CREATE PROCEDURE sp_plantilla(IN p_in INT, OUT p_out VARCHAR(100), INOUT p_io INT)
+COMMENT 'Plantilla completa'
+proc: BEGIN
+  -- 1) variables y condiciones
+  DECLARE v_fin INT DEFAULT 0;
+  DECLARE v_id  INT;
+  DECLARE e_dup CONDITION FOR 1062;
+  -- 2) cursores
+  DECLARE cur CURSOR FOR SELECT id FROM clientes;
+  -- 3) handlers
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_fin = 1;
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    RESIGNAL;
+  END;
+
+  -- 4) validaciones
+  IF p_in IS NULL THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'p_in es obligatorio';
+  END IF;
+  IF p_in = 0 THEN
+    SET p_out = 'Nada que hacer';
+    LEAVE proc;                       -- salida temprana
+  END IF;
+
+  -- 5) lógica dentro de una transacción
+  START TRANSACTION;
+    OPEN cur;
+    bucle: LOOP
+      FETCH cur INTO v_id;
+      IF v_fin = 1 THEN LEAVE bucle; END IF;
+      SET p_io = p_io + 1;
+    END LOOP bucle;
+    CLOSE cur;
+  COMMIT;
+
+  SET p_out = CONCAT('Procesados: ', p_io);
+END //
+DELIMITER ;
+
+SET @io = 0;
+CALL sp_plantilla(1, @out, @io);
+SELECT @out, @io;</code></pre>
+
+ <h3>Tenés que poder escribir esto de memoria</h3>
+ <ul class="mem">
+  <li><label><input type="checkbox" data-mem="1">DELIMITER // · CREATE PROCEDURE · BEGIN · END // · DELIMITER ;</label></li>
+  <li><label><input type="checkbox" data-mem="2">Parámetros IN, OUT, INOUT y cómo llamar con @variable</label></li>
+  <li><label><input type="checkbox" data-mem="3">DECLARE con DEFAULT, SET y SELECT … INTO</label></li>
+  <li><label><input type="checkbox" data-mem="4">IF / ELSEIF / ELSE / END IF y CASE … END CASE</label></li>
+  <li><label><input type="checkbox" data-mem="5">WHILE … DO … END WHILE · REPEAT … UNTIL … END REPEAT · etiqueta: LOOP … LEAVE … END LOOP</label></li>
+  <li><label><input type="checkbox" data-mem="6">Cursor completo: DECLARE, handler NOT FOUND, OPEN, FETCH, CLOSE</label></li>
+  <li><label><input type="checkbox" data-mem="7">Handler EXIT con ROLLBACK + RESIGNAL</label></li>
+  <li><label><input type="checkbox" data-mem="8">SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = …</label></li>
+  <li><label><input type="checkbox" data-mem="9">START TRANSACTION … COMMIT con SELECT … FOR UPDATE</label></li>
+  <li><label><input type="checkbox" data-mem="10">PREPARE · EXECUTE … USING · DEALLOCATE PREPARE</label></li>
+  <li><label><input type="checkbox" data-mem="11">Función: RETURNS + DETERMINISTIC / READS SQL DATA + RETURN</label></li>
+  <li><label><input type="checkbox" data-mem="12">Trigger BEFORE/AFTER con NEW y OLD</label></li>
+ </ul>
+
+ <div class="quiz" data-q="b7"></div>
+
+ <h3>Ejercicios integradores</h3>
+ <div class="ex"><p><b>1.</b> <code>sp_cancelar_pedido(p_pedido)</code> con transacción: error si el pedido no existe o ya está 'enviado' o 'cancelado'; si no, devuelve al stock cada producto del pedido y lo marca 'cancelado'.</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_cancelar_pedido;
+DELIMITER //
+CREATE PROCEDURE sp_cancelar_pedido(IN p_pedido INT)
+BEGIN
+  DECLARE v_estado VARCHAR(20) DEFAULT NULL;
+
+  DECLARE EXIT HANDLER FOR SQLEXCEPTION
+  BEGIN
+    ROLLBACK;
+    RESIGNAL;
+  END;
+
+  START TRANSACTION;
+    SELECT estado INTO v_estado FROM pedidos WHERE id = p_pedido FOR UPDATE;
+
+    IF v_estado IS NULL THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El pedido no existe';
+    ELSEIF v_estado IN ('enviado', 'cancelado') THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'El pedido ya no se puede cancelar';
+    END IF;
+
+    -- UPDATE con JOIN: devuelve el stock de todos los ítems de una
+    UPDATE productos pr
+    JOIN detalle_pedido d ON d.producto_id = pr.id
+    SET pr.stock = pr.stock + d.cantidad
+    WHERE d.pedido_id = p_pedido;
+
+    UPDATE pedidos SET estado = 'cancelado' WHERE id = p_pedido;
+  COMMIT;
+END //
+DELIMITER ;
+CALL sp_cancelar_pedido(3);   -- ok
+CALL sp_cancelar_pedido(1);   -- Error: ya no se puede cancelar (enviado)</code></pre>
+ </div></details></div>
+
+ <div class="ex"><p><b>2.</b> <code>sp_reporte_ventas(p_desde, p_hasta, OUT p_total, OUT p_mejor_cliente)</code>: valida el rango, devuelve un result set con unidades y facturación por categoría, y por OUT el total facturado y el nombre del cliente que más gastó (sin cancelados).</p>
+ <details class="sol"><summary>Ver solución</summary><div>
+<pre><code>DROP PROCEDURE IF EXISTS sp_reporte_ventas;
+DELIMITER //
+CREATE PROCEDURE sp_reporte_ventas(
+  IN  p_desde DATE, IN p_hasta DATE,
+  OUT p_total DECIMAL(12,2), OUT p_mejor_cliente VARCHAR(80))
+BEGIN
+  IF p_desde > p_hasta THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Rango de fechas inválido';
+  END IF;
+
+  -- result set: ventas por categoría
+  SELECT pr.categoria,
+         SUM(d.cantidad)                 AS unidades,
+         SUM(d.cantidad * d.precio_unit) AS facturado
+  FROM pedidos p
+  JOIN detalle_pedido d ON d.pedido_id = p.id
+  JOIN productos pr     ON pr.id = d.producto_id
+  WHERE p.fecha BETWEEN p_desde AND p_hasta AND p.estado <> 'cancelado'
+  GROUP BY pr.categoria
+  ORDER BY facturado DESC;
+
+  SELECT IFNULL(SUM(total), 0) INTO p_total
+  FROM pedidos
+  WHERE fecha BETWEEN p_desde AND p_hasta AND estado <> 'cancelado';
+
+  SELECT c.nombre INTO p_mejor_cliente
+  FROM pedidos p JOIN clientes c ON c.id = p.cliente_id
+  WHERE p.fecha BETWEEN p_desde AND p_hasta AND p.estado <> 'cancelado'
+  GROUP BY c.id, c.nombre
+  ORDER BY SUM(p.total) DESC
+  LIMIT 1;
+END //
+DELIMITER ;
+CALL sp_reporte_ventas('2026-01-01', '2026-12-31', @t, @m);
+SELECT @t, @m;</code></pre>
+ </div></details></div>
+</section>
+
+</main>
+
+<footer class="wrap">MySQL 8 · base de práctica <code>tienda</code> con datos de ejemplo. Tu progreso (bloques terminados y checklist) se guarda en este navegador.</footer>
+
+<script>
+{
+const Q={
+b1:[
+{q:"¿Qué tipo usás para guardar precios?",o:["FLOAT","DOUBLE","DECIMAL(10,2)","VARCHAR(10)"],a:2,e:"DECIMAL es exacto. FLOAT y DOUBLE son aproximados y acumulan errores de redondeo."},
+{q:"¿Cuál reinicia el AUTO_INCREMENT?",o:["DELETE FROM t","TRUNCATE TABLE t","DELETE FROM t WHERE 1=1","UPDATE t SET id = 0"],a:1,e:"TRUNCATE vacía la tabla de golpe y reinicia el contador. DELETE no lo toca."},
+{q:"pedidos.cliente_id tiene ON DELETE CASCADE. Si borrás un cliente…",o:["Se borran sus pedidos","El cliente se borra y los pedidos quedan huérfanos","MySQL no te deja borrarlo","Sus pedidos quedan con cliente_id NULL"],a:0,e:"CASCADE propaga el borrado a los hijos. RESTRICT (default) no te deja; SET NULL pone NULL."},
+{q:"GRANT y REVOKE pertenecen a…",o:["DDL","DML","DCL","TCL"],a:2,e:"DCL = Data Control Language: permisos."},
+{q:"¿Cuántas PRIMARY KEY puede tener una tabla?",o:["Una sola, aunque puede abarcar varias columnas","Todas las que quieras","Dos como máximo","Ninguna, se usa UNIQUE"],a:0,e:"Una por tabla. Puede ser compuesta, como (pedido_id, producto_id)."},
+{q:"Con collation utf8mb4_0900_ai_ci, WHERE categoria = 'electronica'…",o:["Encuentra 'Electrónica'","No encuentra nada por la tilde","Da error","Solo si está en minúscula"],a:0,e:"ai = ignora acentos, ci = ignora mayúsculas."}
+],
+b2:[
+{q:"¿Qué filtra HAVING?",o:["Filas antes de agrupar","Grupos después de agrupar","Columnas del SELECT","Solo valores NULL"],a:1,e:"WHERE filtra filas antes del GROUP BY; HAVING filtra los grupos ya formados."},
+{q:"Orden lógico de ejecución de un SELECT:",o:["SELECT → FROM → WHERE → GROUP BY","FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT","FROM → SELECT → WHERE → ORDER BY","WHERE → FROM → SELECT → HAVING"],a:1,e:"Por eso un alias del SELECT no existe todavía en el WHERE."},
+{q:"Tabla de 10 filas, 3 con email NULL. COUNT(email) devuelve:",o:["10","7","3","NULL"],a:1,e:"COUNT(columna) cuenta solo los no nulos. COUNT(*) contaría 10."},
+{q:"¿Cómo buscás clientes sin email?",o:["WHERE email = NULL","WHERE email IS NULL","WHERE email == NULL","WHERE email = ''"],a:1,e:"Cualquier comparación con NULL da NULL. Se usa IS NULL."},
+{q:"LIKE '_a%' encuentra nombres…",o:["Que terminan en a","Cuya segunda letra es a","Que empiezan con _a","Que contienen una a"],a:1,e:"_ = exactamente un carácter, % = cualquier cantidad."},
+{q:"Workbench tira error 1175 en un UPDATE. ¿Por qué?",o:["Error de sintaxis","Safe updates: UPDATE/DELETE sin clave en el WHERE","Falta permiso","Viola una FK"],a:1,e:"Se apaga con SET SQL_SAFE_UPDATES = 0;"}
+],
+b3:[
+{q:"Querés todos los clientes, tengan o no pedidos:",o:["INNER JOIN","clientes LEFT JOIN pedidos","CROSS JOIN","clientes RIGHT JOIN pedidos"],a:1,e:"LEFT JOIN conserva todas las filas de la tabla de la izquierda."},
+{q:"UNION vs UNION ALL:",o:["UNION ALL elimina duplicados","UNION elimina duplicados, UNION ALL no","Son iguales","UNION ALL ordena el resultado"],a:1,e:"UNION ALL es más rápido porque no busca duplicados."},
+{q:"Índice compuesto (cliente_id, fecha). ¿Qué consulta NO lo aprovecha?",o:["WHERE cliente_id = 2","WHERE cliente_id = 2 AND fecha > '2026-01-01'","WHERE fecha > '2026-01-01'","ORDER BY cliente_id, fecha"],a:2,e:"Regla del prefijo izquierdo: sin la primera columna, el índice no sirve para buscar."},
+{q:"Nivel de aislamiento por defecto en InnoDB:",o:["READ COMMITTED","REPEATABLE READ","SERIALIZABLE","READ UNCOMMITTED"],a:1,e:"REPEATABLE READ."},
+{q:"¿Qué pasa con un TRUNCATE dentro de una transacción?",o:["Se deshace con ROLLBACK","Hace COMMIT implícito","Da error","Espera al COMMIT"],a:1,e:"Es DDL: confirma lo pendiente y no se puede deshacer."},
+{q:"Precios 100, 90, 90, 80 ordenados de mayor a menor. RANK y DENSE_RANK dan:",o:["RANK 1,2,2,4 · DENSE_RANK 1,2,2,3","RANK 1,2,2,3 · DENSE_RANK 1,2,2,4","Los dos 1,2,3,4","RANK no admite empates"],a:0,e:"RANK deja huecos después de un empate; DENSE_RANK no."},
+{q:"NOT IN (subconsulta) y la subconsulta devuelve un NULL:",o:["Funciona normal","No devuelve ninguna fila","Da error","Ignora el NULL"],a:1,e:"x NOT IN (1, NULL) da NULL, nunca verdadero. Usá NOT EXISTS."}
+],
+b4:[
+{q:"¿Para qué sirve DELIMITER //?",o:["Es SQL estándar para abrir bloques","Le dice al cliente dónde termina la sentencia para que los ; internos no la corten","Comenta el código","Separa los parámetros"],a:1,e:"Es un comando del cliente (Workbench, consola), no del servidor."},
+{q:"Un parámetro OUT, al entrar al procedure, vale…",o:["Lo que tenía la variable que pasaste","NULL","0","Da error si lo leés"],a:1,e:"OUT no recibe el valor de afuera. Si querés que entre y salga, usá INOUT."},
+{q:"¿Dónde van los DECLARE?",o:["En cualquier línea","Al principio del BEGIN…END","Después del END","Antes del CREATE"],a:1,e:"Al inicio del bloque y en orden: variables, cursores, handlers."},
+{q:"SELECT nombre INTO v_nombre FROM clientes;  (la tabla tiene 6 filas)",o:["Guarda el primero","Error 1172: más de una fila","Guarda el último","Los concatena"],a:1,e:"SELECT … INTO exige exactamente una fila."},
+{q:"¿Qué bucle se ejecuta siempre al menos una vez?",o:["WHILE","REPEAT … UNTIL","Ninguno","Todos"],a:1,e:"REPEAT evalúa la condición al final."},
+{q:"El equivalente a break en un LOOP es…",o:["EXIT","BREAK","LEAVE etiqueta","ITERATE etiqueta"],a:2,e:"LEAVE sale; ITERATE vuelve al principio (continue)."},
+{q:"¿Cómo cambiás el cuerpo de un SP que ya existe?",o:["ALTER PROCEDURE con el cuerpo nuevo","CREATE OR REPLACE PROCEDURE","DROP PROCEDURE y CREATE de nuevo","UPDATE information_schema.ROUTINES"],a:2,e:"ALTER PROCEDURE solo cambia características y MySQL no tiene CREATE OR REPLACE PROCEDURE."},
+{q:"Diferencia entre @x y DECLARE x:",o:["Ninguna","@x es de sesión (vive toda la conexión); x es local al BEGIN…END","@x es local; x es de sesión","@x es del sistema"],a:1,e:"Las de sistema llevan @@."}
+],
+b5:[
+{q:"Orden obligatorio de los DECLARE:",o:["handlers, cursores, variables","variables/condiciones, cursores, handlers","cursores, variables, handlers","cualquier orden"],a:1,e:"Si lo mezclás, error 1337 o 1338."},
+{q:"¿Qué condición se dispara cuando un FETCH se queda sin filas?",o:["SQLEXCEPTION","NOT FOUND","SQLWARNING","1062"],a:1,e:"NOT FOUND = SQLSTATE de clase '02'."},
+{q:"CONTINUE vs EXIT handler:",o:["CONTINUE sigue en la línea siguiente; EXIT sale del bloque donde se declaró","Al revés","Los dos terminan el SP","EXIT reintenta la sentencia"],a:0,e:"Si el EXIT está en el BEGIN principal, termina el procedure."},
+{q:"SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = CONCAT('Falta ', v);",o:["Funciona","Error de sintaxis: MESSAGE_TEXT necesita un literal o una variable","Solo da un warning","Devuelve NULL"],a:1,e:"Armá el texto antes: SET v_msg = CONCAT(…); y después MESSAGE_TEXT = v_msg."},
+{q:"En el handler SQLEXCEPTION de un SP transaccional conviene…",o:["COMMIT","ROLLBACK y RESIGNAL","No hacer nada","SELECT 'error' y COMMIT"],a:1,e:"Deshacés todo y le avisás a quien llamó."},
+{q:"¿Dónde NO se puede usar PREPARE / EXECUTE?",o:["En procedures","En funciones y triggers","En la consola","En scripts"],a:1,e:"El SQL dinámico solo va en procedures (y sentencias sueltas)."},
+{q:"SQL SECURITY DEFINER significa que el SP…",o:["Corre con los permisos de quien lo creó","Corre con los permisos de quien lo llama","Solo lo puede llamar quien lo creó","Requiere privilegio SUPER"],a:0,e:"Es el default. INVOKER usa los permisos del que llama."},
+{q:"Dentro del bucle de un cursor, un SELECT … INTO no encuentra filas. ¿Qué pasa?",o:["Nada","Se dispara el handler NOT FOUND y el bucle puede cortar antes","Error 1172","Se reinicia el cursor"],a:1,e:"Es la trampa clásica: la bandera se prende aunque el cursor tenga filas."},
+{q:"START TRANSACTION con otra transacción ya abierta:",o:["Crea una anidada","Hace COMMIT implícito de la anterior","Da error","No hace nada"],a:1,e:"MySQL no tiene transacciones anidadas; para eso están los SAVEPOINT."}
+],
+b6:[
+{q:"¿Qué parámetros acepta una función?",o:["IN, OUT e INOUT","Solo IN","Solo OUT","Ninguno"],a:1,e:"Y no se escribe la palabra IN."},
+{q:"En un trigger BEFORE INSERT podés usar…",o:["OLD","NEW, y modificarlo con SET NEW.col","OLD y NEW","Ninguno"],a:1,e:"En INSERT no hay fila vieja."},
+{q:"En un trigger de DELETE existe…",o:["NEW","OLD","Los dos","Ninguno"],a:1,e:"Solo la fila que se borra."},
+{q:"Error 1418 al crear una función:",o:["Falta DELIMITER","Falta DETERMINISTIC / READS SQL DATA / NO SQL con binlog activo","La función ya existe","Falta permiso EXECUTE"],a:1,e:"Declarás la característica que corresponda."},
+{q:"Un DELETE en clientes borra pedidos por ON DELETE CASCADE. ¿Se disparan los triggers de pedidos?",o:["Sí","No"],a:1,e:"Las acciones en cascada de las FK no disparan triggers."},
+{q:"¿Cómo se ejecuta una función?",o:["CALL fn()","Dentro de una expresión: SELECT fn(x)","EXECUTE fn","RUN fn"],a:1,e:"CALL es para procedures."},
+{q:"¿Qué permiso necesita un usuario para llamar un SP?",o:["CREATE ROUTINE","EXECUTE","ALTER ROUTINE","SUPER"],a:1,e:"GRANT EXECUTE ON PROCEDURE base.sp TO usuario;"}
+],
+b7:[
+{q:"sp_x tiene OUT p y nunca le asigna nada. Después de CALL sp_x(@a), @a vale:",o:["Lo que tenía antes","NULL","0","Da error"],a:1,e:"OUT arranca en NULL y ese NULL se copia a @a al salir."},
+{q:"El handler EXIT de SQLEXCEPTION hace ROLLBACK pero no RESIGNAL:",o:["El error llega igual al cliente","El SP termina 'bien' y quien llamó no se entera","Se repite el SP","Se hace COMMIT"],a:1,e:"Por eso el patrón es ROLLBACK + RESIGNAL."},
+{q:"¿Cómo salís antes de un procedure?",o:["RETURN","EXIT","LEAVE etiqueta_del_BEGIN","BREAK"],a:2,e:"RETURN es solo para funciones."},
+{q:"ROW_COUNT() justo después de un UPDATE que cambió 3 filas:",o:["3","1","0","El último id"],a:0,e:"Filas afectadas por la última sentencia DML."},
+{q:"SQLSTATE '45000' es…",o:["Clave duplicada","Excepción definida por el usuario","Fin de datos","Un warning"],a:1,e:"Es el que se usa con SIGNAL para errores propios."},
+{q:"DECLARE CONTINUE HANDLER FOR SQLWARNING captura…",o:["Errores graves","Warnings (SQLSTATE '01…')","Fin de cursor","Nada"],a:1,e:"NOT FOUND es '02…' y SQLEXCEPTION el resto."},
+{q:"¿Dónde ves el código de un SP?",o:["SHOW CREATE PROCEDURE nombre","DESCRIBE nombre","SHOW TABLES","SELECT * FROM nombre"],a:0,e:"También en information_schema.ROUTINES."},
+{q:"Un SP recibe el nombre de la columna para ordenar. ¿Cómo?",o:["ORDER BY p_columna","SQL dinámico con lista blanca (o ORDER BY CASE)","ORDER BY ?","No se puede"],a:1,e:"ORDER BY p_columna ordena por un valor constante: no ordena nada."},
+{q:"¿Qué NO puede hacer una función almacenada?",o:["Leer tablas","Usar IF","Hacer COMMIT o devolver un result set","Llamar a otras funciones"],a:2,e:"Solo devuelve un valor con RETURN."},
+{q:"Sin handler NOT FOUND, el cursor se queda sin filas:",o:["El SP termina con error 1329 (No data)","Nada","Se cierra solo","Devuelve NULL para siempre"],a:0,e:"Siempre declarás el handler con su bandera."},
+{q:"LAST_INSERT_ID() devuelve…",o:["El último id de cualquier conexión","El último AUTO_INCREMENT generado por tu conexión","MAX(id) de la tabla","La cantidad de filas"],a:1,e:"Es por conexión: no lo afectan los inserts de otros usuarios."},
+{q:"¿Cómo mostrás un mensaje de depuración desde un SP?",o:["PRINT 'x'","SELECT 'x' AS debug","ECHO 'x'","RAISE NOTICE 'x'"],a:1,e:"Un SELECT suelto devuelve un result set al cliente."}
+]
+};
+
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+/* resaltado de SQL + botón copiar */
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const KW=/^[A-Z_][A-Z_0-9]+$/;
+function hl(src){
+ const re=/(--[^\n]*)|('(?:[^'\\\n]|\\.)*')|(`[^`\n]*`)|(@@?[A-Za-z_][\w.]*)|\b(\d+(?:\.\d+)?)\b|([A-Za-z_]\w*)/g;
+ let out="",last=0,m;
+ while((m=re.exec(src))){
+  out+=esc(src.slice(last,m.index));
+  const t=esc(m[0]);
+  if(m[1])out+='<span class="c">'+t+'</span>';
+  else if(m[2]||m[3])out+='<span class="s">'+t+'</span>';
+  else if(m[4])out+='<span class="v">'+t+'</span>';
+  else if(m[5])out+='<span class="n">'+t+'</span>';
+  else if(m[6]&&KW.test(m[6]))out+='<span class="k">'+t+'</span>';
+  else out+=t;
+  last=re.lastIndex;
+ }
+ return out+esc(src.slice(last));
+}
+$$("pre code").forEach(c=>{
+ const src=c.textContent.replace(/^\n/,"").replace(/\s+$/,"");
+ c.innerHTML=hl(src);
+ const b=document.createElement("button");b.className="cp";b.type="button";b.textContent="Copiar";
+ b.addEventListener("click",async()=>{
+  let ok=false;
+  try{await navigator.clipboard.writeText(src);ok=true}catch(e){
+   try{const ta=document.createElement("textarea");ta.value=src;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();ok=document.execCommand("copy");ta.remove()}catch(e2){}
+  }
+  b.textContent=ok?"¡Copiado!":"Seleccioná y copiá";
+  setTimeout(()=>b.textContent="Copiar",1600);
+ });
+ c.parentNode.appendChild(b);
+});
+
+/* quizzes */
+$$(".quiz").forEach(box=>{
+ const k=box.dataset.q,qs=Q[k]||[];
+ const head=document.createElement("div");head.className="qh";
+ const h=document.createElement("h4");h.textContent="Quiz rápido · "+qs.length+" preguntas";
+ const sc=document.createElement("span");sc.className="score";
+ head.append(h,sc);box.appendChild(head);
+ let done=0,good=0;
+ const upd=()=>{sc.textContent=done?good+" / "+done+" bien":"Tocá una opción"};
+ qs.forEach((it,i)=>{
+  const d=document.createElement("div");d.className="qi";
+  const p=document.createElement("p");p.className="qq";p.textContent=(i+1)+". "+it.q;
+  const o=document.createElement("div");o.className="opts";
+  const ex=document.createElement("p");ex.className="exp";ex.hidden=true;
+  it.o.forEach((t,j)=>{
+   const b=document.createElement("button");b.type="button";b.textContent=t;
+   b.addEventListener("click",()=>{
+    const bs=$$("button",o);bs.forEach(x=>x.disabled=true);
+    bs[it.a].classList.add("ok");
+    if(j!==it.a)b.classList.add("ko");else good++;
+    done++;upd();
+    ex.textContent=(j===it.a?"Bien. ":"Era: "+it.o[it.a]+". ")+it.e;ex.hidden=false;
+   });
+   o.appendChild(b);
+  });
+  d.append(p,o,ex);box.appendChild(d);
+ });
+ const r=document.createElement("button");r.type="button";r.className="qreset";r.textContent="Reiniciar quiz";
+ r.addEventListener("click",()=>{done=0;good=0;upd();$$(".opts button",box).forEach(b=>{b.disabled=false;b.classList.remove("ok","ko")});$$(".exp",box).forEach(e=>e.hidden=true)});
+ const rw=document.createElement("p");rw.style.margin="12px 0 0";rw.appendChild(r);box.appendChild(rw);
+ upd();
+});
+
+/* progreso guardado */
+const prog=store.get("mysql-prog",{});
+$$("input[data-done],input[data-mem]").forEach(i=>{
+ const key=i.dataset.done?"d-"+i.dataset.done:"m-"+i.dataset.mem;
+ i.checked=!!prog[key];
+ i.addEventListener("change",()=>{prog[key]=i.checked;store.set("mysql-prog",prog);marks();if(typeof tick==="function")tick()});
+});
+function marks(){$$("#plan li").forEach(li=>li.classList.toggle("fin",!!prog["d-"+li.dataset.id]))}
+marks();
+
+/* avance a tu ritmo */
+const ids=["b1","b2","b3","b4","b5","b6","b7"],names={b1:"Fundamentos y DDL",b2:"DML y consultas",b3:"JOINs y SQL avanzado",b4:"Stored Procedures I",b5:"Stored Procedures II",b6:"Funciones, triggers y eventos",b7:"Simulacro final"};
+function tick(){
+ const hechos=ids.filter(k=>prog["d-"+k]).length,next=ids.find(k=>!prog["d-"+k]);
+ $$("#plan li").forEach(li=>li.classList.toggle("now",li.dataset.id===next));
+ $("#nowName").textContent=next?"Sigue: "+names[next]:"¡Terminaste todo!";
+ $("#nowLeft").innerHTML=hechos+"<small>de 7 bloques terminados</small>";
+ $("#nowGo").href="#"+(next||"b7");
+ $("#rail").style.width=(hechos/7*100)+"%";
+ $$("nav.idx a").forEach(a=>a.classList.toggle("on",a.getAttribute("href")==="#"+next));
+}
+tick();
+}
+</script>
+</body>
+</html>
